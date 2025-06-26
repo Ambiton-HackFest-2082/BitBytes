@@ -19,7 +19,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100 p-4">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-blue-700">EduConnect</h1>
+          <h1 className="text-2xl font-bold text-blue-700">SikshyaSetu</h1>
           <p className="text-gray-500 text-sm">A place for Teachers & Students to grow together</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">

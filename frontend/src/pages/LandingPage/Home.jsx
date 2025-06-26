@@ -1,5 +1,13 @@
+import Hero from "../../components/Landingpage/Hero";
+
 const Home = () => {
-  return <div className="h-screen w-screen bg-red-500">HOME PAGE CONTENT</div>;
+  return (
+    <>
+    <Hero />
+     
+      
+    </>
+  );
 };
 
 export default Home;

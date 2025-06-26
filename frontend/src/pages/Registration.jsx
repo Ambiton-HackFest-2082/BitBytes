@@ -71,7 +71,7 @@ export default function Registration() {
             type="submit"
             className="w-full bg-blue-600 text-white rounded-lg p-2 hover:bg-blue-700 transition"
           >
-            Register
+            SikshyaSetu
           </button>
         </form>
         <p className="text-sm text-center mt-4 text-dark-600">
