@@ -14,17 +14,29 @@ const userSchema = new mongoose.Schema(
         },
         email: {
             type: String,
-            required: true,
+            required: [true, "email is must"],
             unique: true,
             lowercase: true,
             trim: true,
+            unique: true
         },
 
         password: {
             type: String,
-            required: [true, "password is must"],
+            required: [true, "password is must"]
+
         },
         refreshToken: String,
+        role: {
+            type: String,
+            enum: ["student", "teacher"],
+            required: true
+        },
+        phone: {
+            type: Number,
+            required: true,
+            trim: true
+        }
     },
     { timestamps: true }
 );
