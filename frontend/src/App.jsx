@@ -1,6 +1,8 @@
 import AppLayout from "./layouts/AppLayout";
 import LandinPageLayout from "./layouts/LandingPageLayout";
 import Home from "./pages/LandingPage/Home";
+import Login from "./pages/Login";
+import Registration from "./pages/Registration";
 import { MyContextProvider } from "./utils/context/myContext";
 import {
   createBrowserRouter,
@@ -23,12 +25,20 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "registration",
+        element: <Registration />,
+      },
     ],
   },
 ]);
 
 function App() {
-  const [count, setCount] = useState(0)
+  
 
   return (
     <MyContextProvider>
