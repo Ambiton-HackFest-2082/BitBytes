@@ -28,6 +28,8 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const [count, setCount] = useState(0)
+
   return (
     <MyContextProvider>
       <main>
@@ -37,4 +39,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
