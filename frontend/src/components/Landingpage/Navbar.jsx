@@ -39,7 +39,7 @@ export default function Navbar() {
       {/* Login on the right */}
       <div className="mr-8">
         <NavLink
-          to="/login"
+          to="/auth"
           className={({ isActive }) =>
             isActive ? "text-green-600 font-semibold" : "text-gray-700 hover:text-green-500"
           }

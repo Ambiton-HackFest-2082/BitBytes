@@ -92,7 +92,7 @@ export default function About() {
         <div className="mt-12 flex flex-col items-center">
           <button
             className="text-xl font-bold text-white bg-blue-600 px-10 py-2 rounded-full shadow-lg transition-transform duration-200 hover:bg-blue-700 hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300 mb-2"
-            onClick={() => navigate('/registration')}
+            onClick={() => navigate('/auth/register')}
           >
             Join SikshyaSetu
           </button>

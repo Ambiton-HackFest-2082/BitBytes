@@ -1,16 +1,9 @@
 import AppLayout from "./layouts/AppLayout";
 import LandinPageLayout from "./layouts/LandingPageLayout";
 import Home from "./pages/LandingPage/Home";
-<<<<<<< HEAD
-import About from "./pages/LandingPage/About";
-import Contact from "./pages/LandingPage/Contact";
-import Login from "./pages/Login";
-import Registration from "./pages/Registration";
-=======
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import NotFound from "./pages/NotFound";
->>>>>>> 12a201c41f63e5f35f2a66bed84b67789e5b986a
 import { MyContextProvider } from "./utils/context/myContext";
 import {
   createBrowserRouter,
@@ -24,6 +17,8 @@ import Offers from "./pages/student/Offers";
 import Requests from "./pages/student/Requests";
 import { Toaster } from "sonner";
 import RequestDetails from "./pages/requestDetails";
+import About from "./pages/LandingPage/About";
+import Contact from "./pages/LandingPage/Contact";
 // import Offers from "./pages/student/Offers";
 
 const router = createBrowserRouter([
@@ -39,55 +34,46 @@ const router = createBrowserRouter([
             index: true,
             element: <Home />,
           },
-           {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "registration",
-        element: <Registration />,
-      },
-      {
-        path: "about",
-        element: <About />,
-      },
-      {
-        path: "contact",
-        element: <Contact />,
-        },
-        ],
-      },
-<<<<<<< HEAD
-     
-=======
-      {
-        path:"*",
-        element:<NotFound />
-      },
-
-      {
-        path:"auth",
-        element:"",
-        children:[
+          
           {
-            index:true,
-            element:<Navigate to={"login"} replace />,
+            path: "about",
+            element: <About />,
           },
           {
-            path:"login",
-            element:<Login />
+            path: "contact",
+            element: <Contact />,
+          },
+            {
+        path: "auth",
+        element: "",
+        children: [
+          {
+            index: true,
+            element: <Navigate to={"login"} replace />,
+          },
+          {
+            path: "login",
+            element: <Login />
 
           },
           {
-            path:"register",
-            element:<Registration />
+            path: "register",
+            element: <Registration />
           }
         ]
       },
+        ],
+      },
+      {
+        path: "*",
+        element: <NotFound />
+      },
+
+    
 
       {
-        path:"request-details",
-        element:<RequestDetails />
+        path: "request-details",
+        element: <RequestDetails />
       },
       {
         path: "student",
@@ -119,17 +105,11 @@ const router = createBrowserRouter([
           },
         ],
       },
->>>>>>> 12a201c41f63e5f35f2a66bed84b67789e5b986a
     ],
   },
 ]);
 
 function App() {
-<<<<<<< HEAD
- 
-
-=======
->>>>>>> 12a201c41f63e5f35f2a66bed84b67789e5b986a
   return (
     <MyContextProvider>
       <main>

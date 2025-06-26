@@ -14,7 +14,7 @@ export default function Footer() {
     <Link to="/" className="hover:text-blue-600">Home</Link>
     <Link to="/about" className="hover:text-blue-600">About</Link>
     <Link to="/contact" className="hover:text-blue-600">Contact</Link>
-    <Link to="/login" className="hover:text-blue-600">Login</Link>
+    <Link to="/auth/login" className="hover:text-blue-600">Login</Link>
   </nav>
 
   {/* Team Members */}

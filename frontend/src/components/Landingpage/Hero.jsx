@@ -27,7 +27,7 @@ export default function Hero() {
 
                     {/* Get Started Button */}
                     <Link
-                        to="/registration"
+                        to="/auth/register"
                         className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-md transition duration-200"
                     >
                         Get Started
