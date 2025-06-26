@@ -31,11 +31,6 @@ const userSchema = new mongoose.Schema(
             type: String,
             enum: ["student", "teacher"],
             required: true
-        },
-        phone: {
-            type: Number,
-            required: true,
-            trim: true
         }
     },
     { timestamps: true }

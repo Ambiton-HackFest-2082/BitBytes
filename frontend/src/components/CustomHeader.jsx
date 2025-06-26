@@ -3,19 +3,21 @@ import { useSidebar } from "@/components/ui/sidebar";
 import Dropdown from "./DropDown";
 import { useState, useEffect, useRef } from "react";
 import { ChevronDown, LogOut, Menu, User } from "lucide-react";
+import useMyContext from "@/hooks/useMyContext";
 
 const CustomHeader = () => {
   const { toggleSidebar } = useSidebar();
+  const {auth} = useMyContext()
 
  
 
-//   const logoutUser = async () => {
-//     try {
-//       await auth.logout();
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
+  const logoutUser = async () => {
+    try {
+      await auth.logout();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const items = [
     {
@@ -25,7 +27,7 @@ const CustomHeader = () => {
     },
     {
       label: "Logout",
-    //   onclick: logoutUser,
+      onclick: logoutUser,
       icon: <LogOut />,
     },
   ];

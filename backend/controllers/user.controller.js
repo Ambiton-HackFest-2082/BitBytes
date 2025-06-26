@@ -19,12 +19,12 @@ const generateAccessAndRefereshTokens = async (userId) => {
     }
 }
 const register = asyncHandler(async (req, res) => {
-    const { fullName, email, password, phone, role } = req.body
-    if ([fullName, email, password, phone, role].some(field => field == "")) {
+    const { fullName, email, password, role } = req.body
+    if ([fullName, email, password, role].some(field => field == "")) {
         throw new ApiError(400, "all fields are required")
     }
     const isUserExist = await User.findOne({
-        $or: [{ email }, { phone }]
+        $or: [{ email }]
     })
     if (isUserExist) {
         throw new ApiError(409, "user already exists")
@@ -33,7 +33,6 @@ const register = asyncHandler(async (req, res) => {
         fullName,
         email,
         password,
-        phone,
         role
     })
     if (!createdUser) {
