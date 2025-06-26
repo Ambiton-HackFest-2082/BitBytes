@@ -1,15 +1,42 @@
-import { Routes, Route } from 'react-router-dom';
-import Login from './pages/Login.jsx';
-import Registration from './pages/Registration.jsx';
+import AppLayout from "./layouts/AppLayout";
+import LandinPageLayout from "./layouts/LandingPageLayout";
+import Home from "./pages/LandingPage/Home";
+import { MyContextProvider } from "./utils/context/myContext";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
+      {
+        path: "",
+        element: <LandinPageLayout />,
+        children: [
+          {
+            index: true,
+            element: <Home />,
+          },
+        ],
+      },
+    ],
+  },
+]);
 
 function App() {
+  const [count, setCount] = useState(0)
+
   return (
-    <Routes>
-      <Route path="/registration" element={<Registration/>} />
-      <Route path="/login" element={<Login />} />
-      <Route path="*" element={<Registration />} />
-    </Routes>
+    <MyContextProvider>
+      <main>
+        <RouterProvider router={router} />
+      </main>
+    </MyContextProvider>
   );
 }
 
-export default App;
+export default App
