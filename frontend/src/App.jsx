@@ -17,6 +17,8 @@ import Offers from "./pages/student/Offers";
 import Requests from "./pages/student/Requests";
 import { Toaster } from "sonner";
 import RequestDetails from "./pages/requestDetails";
+import TeacherLayout from "./layouts/TeacherLayout";
+import TeacherDashboard from "./pages/teacher/Dashboard";
 // import Offers from "./pages/student/Offers";
 
 const router = createBrowserRouter([
@@ -93,6 +95,20 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path:"teacher",
+        element:<TeacherLayout />,
+        children:[
+          {
+            index:true,
+            element:<Navigate to={"dashboard"} replace />
+          },
+          {
+            path:"dashboard",
+            element:<TeacherDashboard />
+          }
+        ]
+      }
     ],
   },
 ]);
