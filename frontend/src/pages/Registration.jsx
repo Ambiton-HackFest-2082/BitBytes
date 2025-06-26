@@ -75,7 +75,7 @@ export default function Registration() {
           </button>
         </form>
         <p className="text-sm text-center mt-4 text-dark-600">
-          Already have an account? <Link to="/Login" className="text-blue-500 underline">Login</Link>
+          Already have an account? <Link to="/auth/login" className="text-blue-500 underline">Login</Link>
 
         </p>
       </div>
