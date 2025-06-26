@@ -18,7 +18,7 @@ const items = [
   },
   {
     title: "Explore Requests",
-    url: "/teacher/requests",
+    url: "/teacher/explore-requests",
     icon: <StickyNote />,
   },
   {

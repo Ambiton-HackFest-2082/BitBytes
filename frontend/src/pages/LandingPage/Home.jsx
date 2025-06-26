@@ -1,5 +1,21 @@
+import Hero from "../../components/Landingpage/Hero";
+import FAQ from "@/components/Landingpage/Faq";
+import Feature from "@/components/Landingpage/Feature";
+import VideoDisplay from "@/components/Landingpage/VideoDisplay";
+import Testimonial from "@/components/Landingpage/Testimonial";
+
 const Home = () => {
-  return <div className="h-screen w-screen bg-red-500">HOME PAGE CONTENT</div>;
+  return (
+    <>
+    <Hero />
+    <Feature />
+    <VideoDisplay />
+    <Testimonial />
+    <FAQ />
+     
+      
+    </>
+  );
 };
 
 export default Home;
