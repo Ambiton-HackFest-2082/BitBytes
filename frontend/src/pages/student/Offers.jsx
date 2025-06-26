@@ -6,7 +6,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Calendar as CalendarIcon } from "lucide-react";
 
 // Mock accepted offers data
 const acceptedOffers = [
@@ -22,6 +22,8 @@ const acceptedOffers = [
         sender: "teacher",
         text: "Hi! Please join at 6pm, link will be shared here.",
       },
+      // Example appointment message:
+      { type: 'appointment', link: 'https://meet.example.com/abc', credential: '1234' }
     ],
   },
   {
@@ -71,14 +73,64 @@ function OfferChatCard({ offer, onChat }) {
   );
 }
 
+function AppointmentBox({ appointment, status, onConfirm, onReject }) {
+  return (
+    <div className="mb-4 p-4 rounded-xl border border-green-200 bg-green-50 flex flex-col gap-2">
+      <div className="flex items-center gap-2 text-green-700 font-semibold mb-1">
+        <CalendarIcon size={16} /> Appointment
+      </div>
+      <div>
+        <span className="font-medium">Link: </span>
+        <a href={appointment.link} target="_blank" rel="noopener noreferrer" className="underline text-green-700 break-all">{appointment.link}</a>
+      </div>
+      {appointment.credential && (
+        <div><span className="font-medium">Password: </span>{appointment.credential}</div>
+      )}
+      {status === "pending" && (
+        <div className="flex gap-2 mt-2">
+          <Button
+            className="bg-green-600 text-white hover:bg-green-700 rounded-full px-5 py-1 text-sm"
+            onClick={onConfirm}
+          >
+            Confirm
+          </Button>
+          <Button
+            className="bg-red-500 text-white hover:bg-red-600 rounded-full px-5 py-1 text-sm"
+            onClick={onReject}
+          >
+            Reject
+          </Button>
+        </div>
+      )}
+      {status === "confirmed" && (
+        <div className="mt-2 text-green-600 font-semibold text-sm">Confirmed</div>
+      )}
+      {status === "rejected" && (
+        <div className="mt-2 text-red-500 font-semibold text-sm">Rejected</div>
+      )}
+    </div>
+  );
+}
+
 function ChatDrawer({ open, onOpenChange, offer, onSendMessage }) {
   const [input, setInput] = useState("");
+  // Find the latest appointment message, if any
+  const appointmentMsg = offer?.messages?.slice().reverse().find(m => m.type === 'appointment');
+  // Store appointment status in local state (per offer)
+  const [appointmentStatus, setAppointmentStatus] = useState("pending");
+
+  // Reset status when offer changes
+  React.useEffect(() => {
+    setAppointmentStatus("pending");
+  }, [offer?.id, appointmentMsg?.link]);
+
   const handleSend = (e) => {
     e.preventDefault();
     if (!input.trim()) return;
     onSendMessage(input);
     setInput("");
   };
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="max-w-md w-full flex flex-col">
@@ -90,6 +142,15 @@ function ChatDrawer({ open, onOpenChange, offer, onSendMessage }) {
           </div>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto my-4 px-1">
+          {/* Appointment box if present */}
+          {appointmentMsg && (
+            <AppointmentBox
+              appointment={appointmentMsg}
+              status={appointmentStatus}
+              onConfirm={() => setAppointmentStatus("confirmed")}
+              onReject={() => setAppointmentStatus("rejected")}
+            />
+          )}
           {offer?.messages?.length === 0 ? (
             <div className="text-neutral-400 text-center mt-8">
               No messages yet.
@@ -97,16 +158,18 @@ function ChatDrawer({ open, onOpenChange, offer, onSendMessage }) {
           ) : (
             <div className="flex flex-col gap-3">
               {offer?.messages?.map((msg, idx) => (
-                <div
-                  key={idx}
-                  className={`max-w-[80%] px-3 py-2 rounded-lg text-sm shadow-sm ${
-                    msg.sender === "student"
-                      ? "bg-green-50 self-end text-green-900"
-                      : "bg-neutral-100 self-start text-neutral-700"
-                  }`}
-                >
-                  {msg.text}
-                </div>
+                msg.type === 'appointment' ? null : (
+                  <div
+                    key={idx}
+                    className={`max-w-[80%] px-3 py-2 rounded-lg text-sm shadow-sm ${
+                      msg.sender === "student"
+                        ? "bg-green-50 self-end text-green-900"
+                        : "bg-neutral-100 self-start text-neutral-700"
+                    }`}
+                  >
+                    {msg.text}
+                  </div>
+                )
               ))}
             </div>
           )}
