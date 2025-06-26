@@ -12,8 +12,6 @@ import {
 } from "react-router-dom";
 import StudentLayout from "./layouts/StudentLayout";
 import StudentDashboard from "./pages/student/Dashboard";
-import About from "./pages/LandingPage/About";
-import Contact from "./pages/LandingPage/Contact";
 // import CreateReq from "./pages/student/CreateReq";
 import Offers from "./pages/student/Offers";
 import Requests from "./pages/student/Requests";
