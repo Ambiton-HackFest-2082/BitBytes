@@ -2,6 +2,8 @@ import { createContext, useEffect, useState } from "react";
 import useAuth from "../services/userService";
 import useOffer from "../services/offerService";
 import usePost from "../services/postService";
+import useChat from "../services/chatService";
+import useAppoinment from "../services/appointmentService";
 
 const MyContext = createContext();
 
@@ -13,6 +15,8 @@ export const MyContextProvider = ({ children }) => {
   const auth = useAuth({setLoading, setUser})
   const offerDb =  useOffer()
   const postDb = usePost()
+  const chatDb = useChat()
+  const appointmentDb = useAppoinment()
 
   useEffect(()=>{
     auth.checkAuthStatus()
@@ -27,7 +31,9 @@ export const MyContextProvider = ({ children }) => {
     setRequests,
     auth,
     offerDb,
-    postDb
+    postDb,
+    chatDb,
+    appointmentDb
   };
 
   return (

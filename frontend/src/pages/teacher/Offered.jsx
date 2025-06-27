@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -8,10 +8,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Calendar as CalendarIcon, X } from "lucide-react";
 import useMyContext from "@/hooks/useMyContext";
+import { toast } from "sonner";
 import { NavLink } from "react-router-dom";
 
 function OfferChatCard({ offer, onChat }) {
-  console.log("offer : ", offer);
   return (
     <div className="bg-white border border-neutral-100 rounded-xl shadow-sm p-5 flex flex-col gap-2 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-1">
@@ -48,21 +48,21 @@ function OfferChatCard({ offer, onChat }) {
   );
 }
 
-function AppointmentModal({ open, onClose, onSend }) {
-  const [link, setLink] = useState("");
-  const [credential, setCredential] = useState("");
+function AppointmentModal({ open, onClose, onSend, offer }) {
+  const [zoomLink, setLink] = useState("");
+  const [credentials, setCredentials] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!link.trim()) {
+    if (!zoomLink.trim()) {
       setError("Platform link is required.");
       return;
     }
     setError("");
-    onSend({ link, credential });
+    onSend({ zoomLink, credentials, scheduleTime: offer.appointmentTime });
     setLink("");
-    setCredential("");
+    setCredentials("");
   };
 
   if (!open) return null;
@@ -87,22 +87,22 @@ function AppointmentModal({ open, onClose, onSend }) {
               type="url"
               className="w-full border rounded-lg px-3 py-2 focus:border-green-400 focus:ring-green-100 outline-none"
               placeholder="https://meet.example.com/session"
-              value={link}
+              value={zoomLink}
               onChange={(e) => setLink(e.target.value)}
               required
             />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">
-              Password / Credential{" "}
+              Password / Credentials{" "}
               <span className="text-neutral-400">(optional)</span>
             </label>
             <input
               type="text"
               className="w-full border rounded-lg px-3 py-2 focus:border-green-400 focus:ring-green-100 outline-none"
               placeholder="Enter password if any"
-              value={credential}
-              onChange={(e) => setCredential(e.target.value)}
+              value={credentials}
+              onChange={(e) => setCredentials(e.target.value)}
             />
           </div>
           {error && <div className="text-red-500 text-xs">{error}</div>}
@@ -127,89 +127,165 @@ function AppointmentModal({ open, onClose, onSend }) {
   );
 }
 
-function ChatDrawer({
-  open,
-  onOpenChange,
-  offer,
-  onSendMessage,
-  onSendAppointment,
-}) {
-  const [input, setInput] = useState("");
+function AppointmentBox({ time }) {
+  return (
+    <div className="mb-4 p-4 rounded-xl border border-green-200 bg-green-50 flex flex-col gap-2">
+      <div className="flex items-center gap-2 text-green-700 font-semibold mb-1">
+        <CalendarIcon size={16} /> Appointment
+      </div>
+      <p className="text-sm text-neutral-600">
+        Appointment has been scheduled at the time :{" "}
+        {new Date(time).toLocaleString()}
+      </p>
+    </div>
+  );
+}
+
+function ChatDrawer({ open, onOpenChange, offer }) {
   const [showModal, setShowModal] = useState(false);
-  const handleSend = (e) => {
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([]);
+  const { chatDb, appointmentDb } = useMyContext();
+  const [appointmentMsg, setAppointmentMsg] = useState(null);
+  const [appointmentSent, setAppointmentSent] = useState(false);
+
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    // Scroll to bottom when messages change
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const chats = await chatDb.fetchChats(offer?._id);
+        setMessages(chats);
+        console.log("Fetched chats:", chats);
+      } catch (error) {
+        console.error("Failed to fetch chats:", error);
+      }
+    };
+    fetchChats();
+  }, [open, onOpenChange]);
+
+  const createMsg = async () => {
+    try {
+      const res = await chatDb.createChat(
+        offer.offeredTo._id,
+        offer._id,
+        input
+      );
+
+      setMessages((prev) => [...prev, res]);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchAppoinemt = async () => {
+      try {
+        const res = await appointmentDb.fetchAppoinment(offer?._id);
+        setAppointmentMsg(res);
+        // console.log(offer)
+      } catch (error) {
+        console.error("Failed to fetch appointment:", error);
+      }
+    };
+    fetchAppoinemt();
+  }, [open, onOpenChange, appointmentSent]);
+
+  const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
-    onSendMessage(input);
+    await createMsg();
     setInput("");
   };
+
+  const onSendAppointment = async (data) => {
+    try {
+      const res = await appointmentDb.createAppoinment(offer._id, data);
+      setAppointmentSent(true);
+      toast.success("Appointment link sent successfully!");
+    } catch (error) {
+      console.error("Failed to send appointment:", error);
+    }
+  };
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="max-w-md w-full flex flex-col">
         <SheetHeader>
-          <SheetTitle>Chat with {offer?.teacher}</SheetTitle>
+          <SheetTitle>Chat with {offer?.offeredTo.fullName}</SheetTitle>
           <div className="text-xs text-neutral-400 mt-1">
             For request:{" "}
-            <span className="font-semibold">{offer?.requestTitle}</span>
+            <span className="font-semibold">{offer?.post.topic}</span>
           </div>
         </SheetHeader>
+        {(appointmentMsg || appointmentSent) && (
+          <AppointmentBox
+            time={appointmentMsg?.scheduleTime}
+            status={""}
+            onConfirm={() => {}}
+            onReject={() => {}}
+          />
+        )}
         <div className="flex-1 overflow-y-auto my-4 px-1">
-          {offer?.messages?.length === 0 ? (
+          {messages?.length === 0 ? (
             <div className="text-neutral-400 text-center mt-8">
               No messages yet.
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {offer?.messages?.map((msg, idx) =>
-                typeof msg === "object" && msg.type === "appointment" ? (
+              {messages?.map((msg, idx) => {
+                const isTeacher = msg.sender.role === "teacher";
+                return (
                   <div
                     key={idx}
-                    className="max-w-[80%] px-4 py-3 rounded-xl text-sm shadow bg-green-50 border border-green-200 self-end flex flex-col gap-1"
-                  >
-                    <div className="flex items-center gap-2 text-green-700 font-semibold mb-1">
-                      <CalendarIcon size={16} /> Appointment
-                    </div>
-                    <div>
-                      <span className="font-medium">Link: </span>
-                      <a
-                        href={msg.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline text-green-700 break-all"
-                      >
-                        {msg.link}
-                      </a>
-                    </div>
-                    {msg.credential && (
-                      <div>
-                        <span className="font-medium">Password: </span>
-                        {msg.credential}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div
-                    key={idx}
-                    className={`max-w-[80%] px-3 py-2 rounded-lg text-sm shadow-sm ${
-                      msg.sender === "student"
-                        ? "bg-green-50 self-end text-green-900"
-                        : "bg-neutral-100 self-start text-neutral-700"
+                    className={`flex flex-col gap-1 max-w-[80%] ${
+                      isTeacher
+                        ? "self-end items-end"
+                        : "self-start items-start"
                     }`}
                   >
-                    {msg.text}
+                    {/* Sender Name */}
+                    <div className="text-xs font-semibold text-gray-600">
+                      {msg.name}
+                    </div>
+
+                    {/* Message Bubble */}
+                    <div
+                      className={`px-3 py-2 rounded-lg text-sm shadow-sm ${
+                        isTeacher
+                          ? "bg-green-50 text-green-900"
+                          : "bg-neutral-100 text-neutral-700"
+                      }`}
+                    >
+                      {msg.message}
+                    </div>
+
+                    {/* Timestamp */}
+                    <p className="text-gray-400 text-[11px]">
+                      {new Date(msg.createdAt).toLocaleString()}
+                    </p>
                   </div>
-                )
-              )}
+                );
+              })}
             </div>
           )}
+          <div ref={bottomRef} />
         </div>
         <div className="flex gap-2 mb-3">
-          <Button
-            type="button"
-            className="bg-green-100 text-green-700 hover:bg-green-200 rounded-full px-4 py-2 text-sm font-medium"
-            onClick={() => setShowModal(true)}
-          >
-            <CalendarIcon size={16} className="mr-1" /> Send Appointment
-          </Button>
+          {appointmentMsg || appointmentSent ? null : (
+            <Button
+              type="button"
+              className="bg-green-100 text-green-700 hover:bg-green-200 rounded-full px-4 py-2 text-sm font-medium"
+              onClick={() => setShowModal(true)}
+            >
+              <CalendarIcon size={16} className="mr-1" /> Send Appointment
+            </Button>
+          )}
         </div>
         <form
           onSubmit={handleSend}
@@ -236,6 +312,8 @@ function ChatDrawer({
             onSendAppointment(data);
             setShowModal(false);
           }}
+          offer={offer}
+          setAppointmentSent={setAppointmentSent}
         />
       </SheetContent>
     </Sheet>
@@ -255,7 +333,7 @@ export default function Offered() {
       try {
         const response = await offerDb.fetchOffers();
         setOffers(response);
-        console.log("compete offers : ",response)
+        console.log("compete offers : ", response);
       } catch (error) {
         console.error("Failed to fetch offers:", error);
       } finally {
@@ -278,54 +356,32 @@ export default function Offered() {
   const handleCloseChat = () => {
     setChatDrawer({ open: false, offer: null });
   };
-  const handleSendMessage = (msg) => {
-    setOffers((prev) =>
-      prev.map((o) =>
-        o.id === chatDrawer.offer.id
-          ? {
-              ...o,
-              messages: [...o.messages, { sender: "student", text: msg }],
-            }
-          : o
-      )
-    );
-    setChatDrawer((prev) => ({
-      ...prev,
-      offer: {
-        ...prev.offer,
-        messages: [...prev.offer.messages, { sender: "student", text: msg }],
-      },
-    }));
-  };
-  const handleSendAppointment = (data) => {
-    setOffers((prev) =>
-      prev.map((o) =>
-        o.id === chatDrawer.offer.id
-          ? {
-              ...o,
-              messages: [
-                ...o.messages,
-                {
-                  type: "appointment",
-                  link: data.link,
-                  credential: data.credential,
-                },
-              ],
-            }
-          : o
-      )
-    );
-    setChatDrawer((prev) => ({
-      ...prev,
-      offer: {
-        ...prev.offer,
-        messages: [
-          ...prev.offer.messages,
-          { type: "appointment", link: data.link, credential: data.credential },
-        ],
-      },
-    }));
-  };
+
+  // const createMsg = async () => {
+  //   try {
+  //     const res = await chatDb.createChat(offer.offeredTo._id, offer._id, input);
+  //   } catch (error) {}
+  // };
+
+  // const handleSendMessage = (msg) => {
+  //   setOffers((prev) =>
+  //     prev.map((o) =>
+  //       o.id === chatDrawer.offer.id
+  //         ? {
+  //             ...o,
+  //             messages: [...o.messages, { sender: "student", text: msg }],
+  //           }
+  //         : o
+  //     )
+  //   );
+  //   setChatDrawer((prev) => ({
+  //     ...prev,
+  //     offer: {
+  //       ...prev.offer,
+  //       messages: [...prev.offer.messages, { sender: "student", text: msg }],
+  //     },
+  //   }));
+  // };
 
   return (
     <div className="w-full ">
@@ -388,13 +444,17 @@ export default function Offered() {
           )}
         </div>
       )}
-      <ChatDrawer
-        open={chatDrawer.open}
-        onOpenChange={handleCloseChat}
-        offer={chatDrawer.offer}
-        onSendMessage={handleSendMessage}
-        onSendAppointment={handleSendAppointment}
-      />
+      {loading ? (
+        <></>
+      ) : (
+        offers.length > 0 && (
+          <ChatDrawer
+            open={chatDrawer.open}
+            onOpenChange={handleCloseChat}
+            offer={chatDrawer.offer}
+          />
+        )
+      )}
     </div>
   );
 }
