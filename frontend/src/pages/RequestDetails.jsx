@@ -3,10 +3,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { User2, Calendar, IndianRupee, Clock, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import useMyContext from "@/hooks/useMyContext";
 
 // Mock: set to true to view as teacher, false as student
-const isTeacher = false;
-
 // Mock request data
 const request = {
   id: 1,
@@ -46,6 +45,7 @@ const offers = [
 ];
 
 function OfferTile({ offer, onAccept, accepted }) {
+  
   return (
     <div
       className={`relative bg-white border border-neutral-100 rounded-2xl shadow-sm p-6 flex flex-col gap-3 transition-all duration-200 hover:shadow-lg ${
@@ -162,6 +162,9 @@ export default function RequestDetails() {
   const [offersList, setOffersList] = useState(offers);
   const [acceptedOfferId, setAcceptedOfferId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const {user} = useMyContext()
+const isTeacher = user?.role === "teacher" || user?.role === "admin";
+
 
   const handleAccept = (offer) => {
     setAcceptedOfferId(offer.id);
