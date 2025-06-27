@@ -2,11 +2,11 @@ import { Link, NavLink } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#F3F4F6] text-gray-700 py-10 mt-0 shadow-inner overflow-hidden">
+    <footer className="relative bg-gradient-to-r from-green-600 to-teal-600 text-white-700 py-10 mt-0 shadow-inner overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none -z-10">
         {/* Large gradient orb bottom left */}
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-br from-purple-100/40 to-blue-100/30 rounded-full blur-2xl -translate-x-1/3 translate-y-1/3"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-br from-teal-100/40 to-blue-100/30 rounded-full blur-2xl -translate-x-1/3 translate-y-1/3"></div>
         {/* Small gradient orb top right */}
         <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-100/30 to-cyan-100/20 rounded-full blur-xl translate-x-1/3 -translate-y-1/3"></div>
         {/* Grid pattern overlay */}
@@ -22,10 +22,12 @@ export default function Footer() {
         <div className="flex flex-col space-y-4 p-4">
           {/* Nav Links */}
           <nav className="flex flex-col space-y-2">
-            <Link to="/" className="hover:text-purple-600 transition-colors">Home</Link>
-            <Link to="/about" className="hover:text-purple-600 transition-colors">About</Link>
-            <Link to="/contact" className="hover:text-purple-600 transition-colors">Contact</Link>
-            <Link to="/auth/login" className="hover:text-purple-600 transition-colors">Login</Link>
+            <a href="#hero-section" className="hover:text-teal-600 transition-colors">Home</a>
+            <a href="#about-section" className="hover:text-teal-600 transition-colors">About</a>
+            <a href="#feature-section" className="hover:text-teal-600 transition-colors">Features</a>
+            <a href="#testimonial-section" className="hover:text-teal-600 transition-colors">Testimonials</a>
+            <a href="#faq-section" className="hover:text-teal-600 transition-colors">FAQ</a>
+            <a href="#contact-section" className="hover:text-teal-600 transition-colors">Contact</a>
           </nav>
         </div>
         <div className="flex flex-col space-y-4 p-4">
@@ -40,7 +42,7 @@ export default function Footer() {
           </div>
         </div>
         {/* Right side (optional social or credit) */}
-        <p className="text-sm mt-2 md:mt-0">Made with MERN for education</p>
+        <p className="text-sm mt-2 md:mt-0">Empowering Education Through Collaboration</p>
       </div>
     </footer>
   );

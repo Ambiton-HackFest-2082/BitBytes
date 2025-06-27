@@ -24,6 +24,10 @@ import Contact from "./pages/LandingPage/Contact";
 import ExploreRequests from "./pages/teacher/ExploreRequests";
 import Offered from "./pages/teacher/Offered";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
+import Feature from "./components/Landingpage/Feature";
+import Testimonials from "./components/Landingpage/Testimonial";
+import Faq from "./components/Landingpage/Faq";
+
 // import Offers from "./pages/student/Offers";
 
 const router = createBrowserRouter([
@@ -38,6 +42,22 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Home />,
+          },
+          {
+            path: "feature",
+            element: <Feature />,
+          },
+          {
+            path: "testimonials",
+            element: <Testimonials />,
+          },
+          {
+            path: "home",
+            element: <Home />,
+          },
+          {
+            path: "faq",
+            element: <Faq />,
           },
          
         ],
@@ -64,6 +84,7 @@ const router = createBrowserRouter([
             path: "register",
             element: <Registration />,
           },
+
           {
             path: "contact",
             element: <Contact />,
