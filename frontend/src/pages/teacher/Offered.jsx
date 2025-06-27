@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Calendar as CalendarIcon, X } from "lucide-react";
+import useMyContext from "@/hooks/useMyContext";
 
 // Mock accepted offers data
 const acceptedOffers = [
@@ -49,11 +50,13 @@ function OfferChatCard({ offer, onChat }) {
         </span>
       </div>
       <div className="text-neutral-500 text-sm mb-1 truncate">
-        Teacher: <span className="font-semibold text-green-700">{offer.teacher}</span>
+        Teacher:{" "}
+        <span className="font-semibold text-green-700">{offer.teacher}</span>
       </div>
       <div className="flex flex-wrap gap-3 text-xs text-neutral-400 mb-2">
         <span>
-          Fee: <span className="text-green-600 font-semibold">₹{offer.fee}</span>
+          Fee:{" "}
+          <span className="text-green-600 font-semibold">₹{offer.fee}</span>
         </span>
         <span>Time: {offer.time.replace("T", " ")}</span>
       </div>
@@ -99,24 +102,29 @@ function AppointmentModal({ open, onClose, onSend }) {
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Platform Link <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium mb-1">
+              Platform Link <span className="text-red-500">*</span>
+            </label>
             <input
               type="url"
               className="w-full border rounded-lg px-3 py-2 focus:border-green-400 focus:ring-green-100 outline-none"
               placeholder="https://meet.example.com/session"
               value={link}
-              onChange={e => setLink(e.target.value)}
+              onChange={(e) => setLink(e.target.value)}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Password / Credential <span className="text-neutral-400">(optional)</span></label>
+            <label className="block text-sm font-medium mb-1">
+              Password / Credential{" "}
+              <span className="text-neutral-400">(optional)</span>
+            </label>
             <input
               type="text"
               className="w-full border rounded-lg px-3 py-2 focus:border-green-400 focus:ring-green-100 outline-none"
               placeholder="Enter password if any"
               value={credential}
-              onChange={e => setCredential(e.target.value)}
+              onChange={(e) => setCredential(e.target.value)}
             />
           </div>
           {error && <div className="text-red-500 text-xs">{error}</div>}
@@ -141,7 +149,13 @@ function AppointmentModal({ open, onClose, onSend }) {
   );
 }
 
-function ChatDrawer({ open, onOpenChange, offer, onSendMessage, onSendAppointment }) {
+function ChatDrawer({
+  open,
+  onOpenChange,
+  offer,
+  onSendMessage,
+  onSendAppointment,
+}) {
   const [input, setInput] = useState("");
   const [showModal, setShowModal] = useState(false);
   const handleSend = (e) => {
@@ -156,7 +170,8 @@ function ChatDrawer({ open, onOpenChange, offer, onSendMessage, onSendAppointmen
         <SheetHeader>
           <SheetTitle>Chat with {offer?.teacher}</SheetTitle>
           <div className="text-xs text-neutral-400 mt-1">
-            For request: <span className="font-semibold">{offer?.requestTitle}</span>
+            For request:{" "}
+            <span className="font-semibold">{offer?.requestTitle}</span>
           </div>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto my-4 px-1">
@@ -166,8 +181,8 @@ function ChatDrawer({ open, onOpenChange, offer, onSendMessage, onSendAppointmen
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {offer?.messages?.map((msg, idx) => (
-                typeof msg === 'object' && msg.type === 'appointment' ? (
+              {offer?.messages?.map((msg, idx) =>
+                typeof msg === "object" && msg.type === "appointment" ? (
                   <div
                     key={idx}
                     className="max-w-[80%] px-4 py-3 rounded-xl text-sm shadow bg-green-50 border border-green-200 self-end flex flex-col gap-1"
@@ -177,10 +192,20 @@ function ChatDrawer({ open, onOpenChange, offer, onSendMessage, onSendAppointmen
                     </div>
                     <div>
                       <span className="font-medium">Link: </span>
-                      <a href={msg.link} target="_blank" rel="noopener noreferrer" className="underline text-green-700 break-all">{msg.link}</a>
+                      <a
+                        href={msg.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline text-green-700 break-all"
+                      >
+                        {msg.link}
+                      </a>
                     </div>
                     {msg.credential && (
-                      <div><span className="font-medium">Password: </span>{msg.credential}</div>
+                      <div>
+                        <span className="font-medium">Password: </span>
+                        {msg.credential}
+                      </div>
                     )}
                   </div>
                 ) : (
@@ -195,7 +220,7 @@ function ChatDrawer({ open, onOpenChange, offer, onSendMessage, onSendAppointmen
                     {msg.text}
                   </div>
                 )
-              ))}
+              )}
             </div>
           )}
         </div>
@@ -242,6 +267,20 @@ function ChatDrawer({ open, onOpenChange, offer, onSendMessage, onSendAppointmen
 export default function Offered() {
   const [chatDrawer, setChatDrawer] = useState({ open: false, offer: null });
   const [offers, setOffers] = useState(acceptedOffers);
+  const { offerDb } = useMyContext();
+
+  useEffect(() => {
+    const fetchOffers = async () => {
+      try {
+        const offersData = await offerDb.fetchOffers();
+        console.log(offersData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchOffers()
+  }, []);
 
   const handleOpenChat = (offer) => {
     setChatDrawer({ open: true, offer });
@@ -276,7 +315,11 @@ export default function Offered() {
               ...o,
               messages: [
                 ...o.messages,
-                { type: 'appointment', link: data.link, credential: data.credential },
+                {
+                  type: "appointment",
+                  link: data.link,
+                  credential: data.credential,
+                },
               ],
             }
           : o
@@ -288,7 +331,7 @@ export default function Offered() {
         ...prev.offer,
         messages: [
           ...prev.offer.messages,
-          { type: 'appointment', link: data.link, credential: data.credential },
+          { type: "appointment", link: data.link, credential: data.credential },
         ],
       },
     }));
@@ -310,7 +353,7 @@ export default function Offered() {
           {"No offers created yet."}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {offers.map((offer) => (
             <OfferChatCard
               key={offer.id}

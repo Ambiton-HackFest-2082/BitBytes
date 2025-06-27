@@ -1,16 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { User2, Calendar, IndianRupee, Clock, CheckCircle2 } from "lucide-react";
+import {
+  User2,
+  Calendar,
+  IndianRupee,
+  Clock,
+  CheckCircle2,
+} from "lucide-react";
 import { toast } from "sonner";
+import useMyContext from "@/hooks/useMyContext";
 import useMyContext from "@/hooks/useMyContext";
 
 // Mock: set to true to view as teacher, false as student
+
 // Mock request data
 const request = {
   id: 1,
   title: "Learn React Basics",
-  description: "I want to understand React fundamentals, including components, props, and state. Looking for a focused, hands-on session.",
+  description:
+    "I want to understand React fundamentals, including components, props, and state. Looking for a focused, hands-on session.",
   fee: 500,
   preferredTime: "2024-06-12T18:00",
   createdAt: "2024-06-01T10:00",
@@ -162,9 +171,13 @@ export default function RequestDetails() {
   const [offersList, setOffersList] = useState(offers);
   const [acceptedOfferId, setAcceptedOfferId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const {user} = useMyContext()
-const isTeacher = user?.role === "teacher" || user?.role === "admin";
+  const { user, offerDb } = useMyContext();
+  const [isTeacher, setIsTeacher] = useState(false);
 
+  useEffect(() => {
+    const isteacher = user?.role === "teacher";
+    setIsTeacher(isteacher);
+  }, [user]);
 
   const handleAccept = (offer) => {
     setAcceptedOfferId(offer.id);
@@ -174,12 +187,18 @@ const isTeacher = user?.role === "teacher" || user?.role === "admin";
     toast.success("Offer accepted! You can now chat with the teacher.");
   };
 
-  const handleOfferSubmit = () => {
+  const handleOfferSubmit = async (formdata) => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const res = await offerDb.createOffer(formdata);
+      console.log(res)
       toast.success("Offer sent to the student!");
-    }, 1200);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error sending offer to the student!");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -232,7 +251,9 @@ const isTeacher = user?.role === "teacher" || user?.role === "admin";
       )}
 
       {/* Teacher: Offer Form */}
-      {isTeacher && <OfferForm onSubmit={handleOfferSubmit} loading={loading} />}
+      {isTeacher && (
+        <OfferForm onSubmit={handleOfferSubmit} loading={loading} />
+      )}
     </div>
   );
-} 
+}
