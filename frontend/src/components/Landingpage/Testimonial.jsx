@@ -54,7 +54,7 @@ export default function Testimonial() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 py-16 px-4 sm:px-6 lg:px-8">
       {/* Header Section */}
       <div className="max-w-6xl mx-auto text-center mb-16">
-        <div className="inline-block bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+        <div className="inline-block bg-teal-100 text-teal-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
           Testimonials
         </div>
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -129,7 +129,7 @@ export default function Testimonial() {
             >
               {/* Quote Icon */}
               <div className="absolute top-6 right-6 opacity-10">
-                <Quote className="w-16 h-16 text-purple-600" />
+                <Quote className="w-16 h-16 text-teal-600" />
               </div>
               
               {/* Profile Section */}
@@ -138,9 +138,9 @@ export default function Testimonial() {
                   <img
                     src={testimonial.image}
                     alt={testimonial.name}
-                    className="w-16 h-16 rounded-full object-cover ring-4 ring-purple-100"
+                    className="w-16 h-16 rounded-full object-cover ring-4 ring-teal-100"
                   />
-                  <div className="absolute -bottom-1 -right-1 bg-purple-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+                  <div className="absolute -bottom-1 -right-1 bg-teal-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
                     {testimonial.rating}
                   </div>
                 </div>
@@ -148,7 +148,7 @@ export default function Testimonial() {
                   <h3 className="text-xl font-bold text-gray-900 mb-1">
                     {testimonial.name}
                   </h3>
-                  <p className="text-purple-600 font-medium text-sm mb-1">
+                  <p className="text-teal-600 font-medium text-sm mb-1">
                     {testimonial.role}
                   </p>
                   <p className="text-gray-500 text-sm mb-3">

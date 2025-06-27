@@ -39,16 +39,10 @@ const router = createBrowserRouter([
             index: true,
             element: <Home />,
           },
-          {
-            path: "about",
-            element: <About />,
-          },
-          {
-            path: "contact",
-            element: <Contact />,
-          },
+         
         ],
       },
+      
       {
         path: "*",
         element: <NotFound />,
@@ -69,6 +63,14 @@ const router = createBrowserRouter([
           {
             path: "register",
             element: <Registration />,
+          },
+          {
+            path: "contact",
+            element: <Contact />,
+          },
+          {
+            path: "about",
+            element: <About />,
           },
         ],
       },

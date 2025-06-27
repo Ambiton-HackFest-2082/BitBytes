@@ -62,10 +62,10 @@ export default function FAQ() {
       <div className="max-w-6xl w-full">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-teal-500 to-green-500 rounded-full mb-4">
             <HelpCircle className="w-8 h-8 text-white" />
           </div>
-          <div className="inline-block bg-purple-100 text-purple-700 px-4 py-1 rounded-full text-sm font-medium mb-4">
+          <div className="inline-block bg-teal-100 text-teal-700 px-4 py-1 rounded-full text-sm font-medium mb-4">
             FAQ
           </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
@@ -87,7 +87,7 @@ export default function FAQ() {
               }}
               className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all duration-200 ${
                 activeTab === tab.name
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                  ? "bg-white-500 shadow-lg"
                   : "bg-white text-gray-600 hover:bg-gray-50 shadow-sm"
               }`}
             >
@@ -115,8 +115,8 @@ export default function FAQ() {
                   <div
                     className={`w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all duration-200 ${
                       openIndex === index
-                        ? "bg-blue-500 border-blue-500 rotate-45"
-                        : "hover:border-blue-400"
+                        ? "bg-green-500 border-green-500 rotate-45"
+                        : "hover:border-green-400"
                     }`}
                   >
                     <span

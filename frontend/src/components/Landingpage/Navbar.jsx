@@ -24,7 +24,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
           {/* Logo on the left */}
           <Link to="/" className="text-2xl font-black text-gray-900">
-            Siksya<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-500">Setu</span>
+          Sikshya<span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-green-500">Setu</span>
           </Link>
 
           {/* Center links */}
@@ -34,8 +34,8 @@ export default function Navbar() {
               className={({ isActive }) =>
                 `transition-colors duration-200 ${
                   isActive 
-                    ? "text-purple-600 font-semibold" 
-                    : "text-gray-700 hover:text-purple-600"
+                    ? "text-teal-600 font-semibold" 
+                    : "text-gray-700 hover:text-teal-600"
                 }`
               }
             >
@@ -46,8 +46,8 @@ export default function Navbar() {
               className={({ isActive }) =>
                 `transition-colors duration-200 ${
                   isActive 
-                    ? "text-purple-600 font-semibold" 
-                    : "text-gray-700 hover:text-purple-600"
+                    ? "text-teal-600 font-semibold" 
+                    : "text-gray-700 hover:text-teal-600"
                 }`
               }
             >
@@ -58,24 +58,12 @@ export default function Navbar() {
               className={({ isActive }) =>
                 `transition-colors duration-200 ${
                   isActive 
-                    ? "text-purple-600 font-semibold" 
-                    : "text-gray-700 hover:text-purple-600"
+                    ? "text-teal-600 font-semibold" 
+                    : "text-gray-700 hover:text-teal-600"
                 }`
               }
             >
               Contact
-            </NavLink>
-            <NavLink
-              to="/courses"
-              className={({ isActive }) =>
-                `transition-colors duration-200 ${
-                  isActive 
-                    ? "text-purple-600 font-semibold" 
-                    : "text-gray-700 hover:text-purple-600"
-                }`
-              }
-            >
-              Courses
             </NavLink>
           </div>
 
@@ -83,7 +71,7 @@ export default function Navbar() {
           <div className="flex items-center space-x-4">
             <NavLink
               to="/auth"
-              className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="bg-gradient-to-r from-teal-500 to-green-500 hover:from-teal-600 hover:to-green-600 text-white font-semibold px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               Login
             </NavLink>

@@ -14,7 +14,7 @@ export default function Feature() {
 
       {/* Badge */}
       <div className="flex justify-center mb-4">
-        <span className="px-6 py-2 rounded-full bg-purple-100 text-purple-700 font-medium text-base shadow-sm">
+        <span className="px-6 py-2 rounded-full bg-teal-100 text-teal-700 font-medium text-base shadow-sm">
           Why Choose SikshyaSetu?
         </span>
       </div>

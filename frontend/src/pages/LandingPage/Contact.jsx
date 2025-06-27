@@ -28,7 +28,7 @@ export default function ContactUs() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-100 py-12 px-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-teal-50 to-indigo-100 py-12 px-6">
       <div className="max-w-xl mx-auto bg-white rounded-xl shadow-md p-8 border border-gray-100">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Contact Us</h1>
         <p className="text-gray-600 mb-8 text-center">
@@ -36,12 +36,12 @@ export default function ContactUs() {
         </p>
 
         <div className="space-y-4">
-          <div onClick={handlePhoneClick} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-blue-50 group">
-            <div className="bg-blue-100 p-2 rounded-lg group-hover:bg-blue-200">
-              <Phone className="w-5 h-5 text-blue-600" />
+          <div onClick={handlePhoneClick} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-green-50 group">
+            <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200">
+              <Phone className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <h4 className="font-semibold text-gray-800 text-sm group-hover:text-blue-700">Phone Call</h4>
+              <h4 className="font-semibold text-gray-800 text-sm group-hover:text-green-700">Phone Call</h4>
               <p className="text-gray-600 text-sm">9816317861</p>
             </div>
           </div>
@@ -56,18 +56,18 @@ export default function ContactUs() {
             </div>
           </div>
 
-          <div onClick={handleEmailClick} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-purple-50 group">
-            <div className="bg-purple-100 p-2 rounded-lg group-hover:bg-purple-200">
-              <Mail className="w-5 h-5 text-purple-600" />
+          <div onClick={handleEmailClick} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-teal-50 group">
+            <div className="bg-teal-100 p-2 rounded-lg group-hover:bg-teal-200">
+              <Mail className="w-5 h-5 text-teal-600" />
             </div>
             <div>
-              <h4 className="font-semibold text-gray-800 text-sm group-hover:text-purple-700">Email</h4>
+              <h4 className="font-semibold text-gray-800 text-sm group-hover:text-teal-700">Email</h4>
               <p className="text-gray-600 text-sm break-all">sikshyasetusupport@gmail.com</p>
             </div>
           </div>
         </div>
 
-        <button onClick={handleContactSupport} className="w-full mt-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg">
+        <button onClick={handleContactSupport} className="w-full mt-8 bg-gradient-to-r from-green-600 to-teal-600 text-white py-3 px-4 rounded-lg font-medium hover:from-green-700 hover:to-teal-700 shadow-md hover:shadow-lg">
           Contact Support
         </button>
       </div>
