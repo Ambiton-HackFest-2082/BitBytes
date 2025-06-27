@@ -108,4 +108,30 @@ const fetchOfferByReqId = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, offers, "Successfully fetched Offers"));
 });
 
-export { createOffer, fetchOffers, fetchOfferByReqId, fetchOffersByReqId };
+const acceptOffer = asyncHandler(async (req, res) => {
+  const { offerId } = req.query;
+  const offer = await Offer.findById(offerId);
+  const post = await Post.findById(offer?.post);
+
+  if (!offer) {
+    throw new ApiError(404, "Offer not found");
+  }
+
+  offer.status = "Accepted";
+  await offer.save();
+
+  post.status = "closed";
+  await post.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, offer, "Offer accepted successfully"));
+});
+
+export {
+  createOffer,
+  fetchOffers,
+  fetchOfferByReqId,
+  fetchOffersByReqId,
+  acceptOffer,
+};
