@@ -1,69 +1,75 @@
-import React, { useState } from "react";
+import { Phone, Mail } from "lucide-react";
 
-export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+export default function ContactUs() {
+  const handlePhoneClick = () => {
+    window.open('tel:9816317861', '_blank');
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setForm({ name: "", email: "", message: "" });
+  const handleWhatsAppClick = () => {
+    window.open('https://wa.me/9779816317861', '_blank');
+  };
+
+  const handleEmailClick = () => {
+    const email = "sikshyasetusupport@gmail.com";
+    const subject = encodeURIComponent("Hello from SikshyaSetu");
+    const body = encodeURIComponent("Hi, I wanted to reach out to you regarding...");
+
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`;
+    window.open(gmailUrl, '_blank');
+  };
+
+  const handleContactSupport = () => {
+    const email = "sikshyasetusupport@gmail.com";
+    const subject = encodeURIComponent("Support Request from Contact Page");
+    const body = encodeURIComponent("Hi Team,\n\nI have a question regarding...");
+
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`;
+    window.open(gmailUrl, '_blank');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-200 p-4">
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-blue-700 mb-4 text-center">Contact Us</h1>
-        <p className="text-gray-600 mb-6 text-center">
-          Have questions or feedback? Fill out the form below or reach us directly!
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-teal-50 to-indigo-100 py-12 px-6">
+      <div className="max-w-xl mx-auto bg-white rounded-xl shadow-md p-8 border border-gray-100">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Contact Us</h1>
+        <p className="text-gray-600 mb-8 text-center">
+          Get in touch with our support team through any of these channels:
         </p>
-        {submitted && (
-          <div className="bg-green-100 text-green-800 px-4 py-2 rounded mb-4 text-center">
-            Thank you for reaching out! We'll get back to you soon.
+
+        <div className="space-y-4">
+          <div onClick={handlePhoneClick} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-green-50 group">
+            <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200">
+              <Phone className="w-5 h-5 text-green-600" />
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-800 text-sm group-hover:text-green-700">Phone Call</h4>
+              <p className="text-gray-600 text-sm">9816317861</p>
+            </div>
           </div>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Your Name"
-            className="w-full border rounded-lg p-2"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Your Email"
-            className="w-full border rounded-lg p-2"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-          <textarea
-            name="message"
-            placeholder="Your Message"
-            className="w-full border rounded-lg p-2 min-h-[100px]"
-            value={form.message}
-            onChange={handleChange}
-            required
-          />
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white rounded-lg p-2 hover:bg-blue-700 transition font-semibold"
-          >
-            Send Message
-          </button>
-        </form>
-        <div className="mt-8 text-center text-gray-500 text-sm">
-          <div>Email: <a href="mailto:support@sikshyasetu.com" className="text-blue-600 underline">support@sikshyasetu.com</a></div>
-          <div>Phone: <a href="tel:+1234567890" className="text-blue-600 underline">+977 9825808450</a></div>
+
+          <div onClick={handleWhatsAppClick} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-green-50 group">
+            <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200">
+              <Phone className="w-5 h-5 text-green-600" />
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-800 text-sm group-hover:text-green-700">WhatsApp</h4>
+              <p className="text-gray-600 text-sm">9816317861</p>
+            </div>
+          </div>
+
+          <div onClick={handleEmailClick} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-teal-50 group">
+            <div className="bg-teal-100 p-2 rounded-lg group-hover:bg-teal-200">
+              <Mail className="w-5 h-5 text-teal-600" />
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-800 text-sm group-hover:text-teal-700">Email</h4>
+              <p className="text-gray-600 text-sm break-all">sikshyasetusupport@gmail.com</p>
+            </div>
+          </div>
         </div>
+
+        <button onClick={handleContactSupport} className="w-full mt-8 bg-gradient-to-r from-green-600 to-teal-600 text-white py-3 px-4 rounded-lg font-medium cursor-pointer hover:from-green-700 hover:to-teal-700 shadow-md hover:shadow-lg">
+          Contact Support
+        </button>
       </div>
     </div>
   );

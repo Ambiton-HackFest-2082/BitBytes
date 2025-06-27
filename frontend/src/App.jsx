@@ -39,37 +39,40 @@ const router = createBrowserRouter([
             index: true,
             element: <Home />,
           },
+         
+        ],
+      },
+      
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+
+      {
+        path: "auth",
+        element: "",
+        children: [
           {
-            path: "about",
-            element: <About />,
+            index: true,
+            element: <Navigate to={"login"} replace />,
+          },
+          {
+            path: "login",
+            element: <Login />,
+          },
+          {
+            path: "register",
+            element: <Registration />,
           },
           {
             path: "contact",
             element: <Contact />,
           },
           {
-            path: "auth",
-            element: "",
-            children: [
-              {
-                index: true,
-                element: <Navigate to={"login"} replace />,
-              },
-              {
-                path: "login",
-                element: <Login />,
-              },
-              {
-                path: "register",
-                element: <Registration />,
-              },
-            ],
+            path: "about",
+            element: <About />,
           },
         ],
-      },
-      {
-        path: "*",
-        element: <NotFound />,
       },
 
       {

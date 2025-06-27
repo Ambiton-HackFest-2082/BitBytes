@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import useMyContext from "@/hooks/useMyContext";
+import useMyContext from "@/hooks/useMyContext";
 
 // Mock: set to true to view as teacher, false as student
 
@@ -53,6 +54,7 @@ const offers = [
 ];
 
 function OfferTile({ offer, onAccept, accepted }) {
+  
   return (
     <div
       className={`relative bg-white border border-neutral-100 rounded-2xl shadow-sm p-6 flex flex-col gap-3 transition-all duration-200 hover:shadow-lg ${
