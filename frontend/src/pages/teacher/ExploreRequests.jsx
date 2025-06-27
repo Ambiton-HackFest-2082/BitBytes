@@ -1,27 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { toast } from "sonner";
-import { useNavigate
-
- } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useMyContext from "@/hooks/useMyContext";
 
 // RequestCard component
 function RequestCard({ request, onView }) {
   const [hovered, setHovered] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div
       className="relative bg-white border border-neutral-100 rounded-xl shadow-sm p-5 flex flex-col gap-2 hover:shadow-md cursor-pointer transition-shadow group"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => navigate("/request-details")}
+      onClick={() => navigate(`/request-details/${request._id}`)}
     >
       <div className="flex items-center justify-between mb-1">
-        <span className="font-semibold text-neutral-800 text-base truncate max-w-[70%]">
-          {request.title}
+        <span className="font-semibold text-neutral-800  truncate max-w-[70%]">
+          {request.topic}
         </span>
         <span
-          className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+          className={`px-2 py-0.5 rounded-full font-semibold ${
             request.status === "Open"
               ? "bg-green-50 text-green-600"
               : request.status === "Closed"
@@ -32,93 +31,48 @@ function RequestCard({ request, onView }) {
           {request.status}
         </span>
       </div>
-      <div className="text-neutral-500 text-sm mb-1 truncate">
+      <div className="text-neutral-500  mb-1 truncate">
         {request.description}
       </div>
-      <div className="flex flex-wrap gap-3 text-xs text-neutral-400 mb-2">
+      <div className="flex flex-wrap gap-3  text-neutral-400 mb-2">
         <span>
           Fee:{" "}
-          <span className="text-green-600 font-semibold">₹{request.fee}</span>
+          <span className="text-green-600 font-semibold">
+            ₹{request.budget}
+          </span>
         </span>
-        <span>Preferred: {request.preferredTime}</span>
+        <span>
+          Preferred: {new Date(request.appointmentTime).toLocaleString()}
+        </span>
       </div>
     </div>
   );
 }
 
-// Main Requests Page
-const initialRequests = [
-  {
-    id: 1,
-    title: "Learn React Basics",
-    description: "Need help with React fundamentals.",
-    fee: 500,
-    preferredTime: "2024-06-10T18:00",
-    status: "Open",
-    offers: 2,
-  },
-  {
-    id: 2,
-    title: "Math Tutoring",
-    description: "Algebra and calculus doubts.",
-    fee: 700,
-    preferredTime: "2024-06-12T10:00",
-    status: "Offer Accepted",
-    offers: 3,
-  },
-  {
-    id: 3,
-    title: "Physics Doubts",
-    description: "Mechanics and optics.",
-    fee: 400,
-    preferredTime: "2024-06-15T14:00",
-    status: "Open",
-    offers: 1,
-  },
-  {
-    id: 4,
-    title: "Python Basics",
-    description: "Want to learn Python from scratch.",
-    fee: 600,
-    preferredTime: "2024-06-18T09:00",
-    status: "Closed",
-    offers: 0,
-  },
-  {
-    id: 5,
-    title: "English Grammar",
-    description: "Improve grammar skills.",
-    fee: 300,
-    preferredTime: "2024-06-20T17:00",
-    status: "Open",
-    offers: 2,
-  },
-  {
-    id: 6,
-    title: "History Help",
-    description: "Need help with world history.",
-    fee: 350,
-    preferredTime: "2024-06-22T11:00",
-    status: "Open",
-    offers: 1,
-  },
-  {
-    id: 7,
-    title: "JavaScript Advanced",
-    description: "Async/await, closures, etc.",
-    fee: 800,
-    preferredTime: "2024-06-25T21:00",
-    status: "Open",
-    offers: 4,
-  },
-];
-
 export default function ExploreRequests() {
-  const [requests, setRequests] = useState(initialRequests);
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { postDb } = useMyContext();
 
-  // Handlers
-
-  const handleView = () => toast.info("View feature coming soon!");
+  useEffect(() => {
+    const fetchRequests = async () => {
+      setLoading(true);
+      try {
+        const allPosts = await postDb.fetchPostsForTeacher();
+        if (allPosts) {
+          setRequests(allPosts);
+        } else {
+          toast.error("Failed to fetch requests.");
+        }
+      } catch (error) {
+        console.error("Error fetching requests:", error);
+        toast.error("Error fetching requests.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRequests();
+  }, []);
 
   return (
     <div className="w-full">
@@ -134,14 +88,18 @@ export default function ExploreRequests() {
           </p>
         </div>
       </div>
-      {requests.length === 0 ? (
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600"></div>
+        </div>
+      ) : requests.length === 0 ? (
         <div className="text-neutral-400 text-center py-16">
           No requests found.{" "}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {requests.slice(0, 6).map((req) => (
-            <RequestCard key={req.id} request={req} onView={handleView} />
+            <RequestCard key={req._id} request={req} />
           ))}
         </div>
       )}

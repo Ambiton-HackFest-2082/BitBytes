@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -8,100 +8,89 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Pencil, Eye, Trash2, X, Plus } from "lucide-react";
-import { Toaster, toast } from "sonner";
 import { ConfirmDialog } from "@/components/ui/alert-dialog";
+import useMyContext from "@/hooks/useMyContext";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 // RequestCard component
 function RequestCard({ request, onEdit, onView, onDelete, onCloseRequest }) {
   const [hovered, setHovered] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [closeDialogOpen, setCloseDialogOpen] = useState(false);
+  const navigate = useNavigate();
   return (
     <div
-      className="relative bg-white border border-neutral-100 rounded-xl shadow-sm p-5 flex flex-col gap-2 hover:shadow-md transition-shadow group"
+      className="relative bg-white border cursor-pointer border-neutral-100 rounded-xl shadow-sm p-5 flex flex-col gap-2 hover:shadow-md transition-shadow group"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="flex items-center justify-between mb-1">
-        <span className="font-semibold text-neutral-800 text-base truncate max-w-[70%]">
-          {request.title}
-        </span>
-        <span
-          className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-            request.status === "Open"
-              ? "bg-green-50 text-green-600"
-              : request.status === "Closed"
-              ? "bg-neutral-200 text-neutral-500"
-              : "bg-green-500 text-white"
-          }`}
-        >
-          {request.status}
-        </span>
-      </div>
-      <div className="text-neutral-500 text-sm mb-1 truncate">
-        {request.description}
-      </div>
-      <div className="flex flex-wrap gap-3 text-xs text-neutral-400 mb-2">
-        <span>
-          Fee:{" "}
-          <span className="text-green-600 font-semibold">₹{request.fee}</span>
-        </span>
-        <span>Preferred: {request.preferredTime}</span>
-        <span>
-          Offers:{" "}
-          <span className="text-green-600 font-semibold">{request.offers}</span>
-        </span>
-      </div>
-      <div className="flex gap-2 mt-auto">
-        <ConfirmDialog
-          open={closeDialogOpen}
-          onOpenChange={setCloseDialogOpen}
-          title="Close Request?"
-          description="Are you sure you want to close this request? You won't be able to reopen it."
-          confirmText="Close"
-          cancelText="Cancel"
-          onConfirm={() => {
-            setCloseDialogOpen(false);
-            onCloseRequest(request);
-          }}
-          onCancel={() => setCloseDialogOpen(false)}
-        >
-          <Button
-            size="sm"
-            className="mt-2 bg-green-600 text-white px-4 py-2 hover:bg-green-700 flex items-center gap-2 cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              setCloseDialogOpen(true);
-            }}
-            disabled={request.status === "Closed"}
-            type="button"
-          >
-            Close Request
-          </Button>
-        </ConfirmDialog>
-        <div className="flex gap-1 ml-auto">
-          <Button
-            size="icon"
-            variant="ghost"
-            className={`transition-opacity ${
-              hovered ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-            } text-neutral-400 ${
-              request.status === "Closed"
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:text-green-600"
+      <div onClick={() => navigate(`/request-details/${request._id}`)}>
+        <div className="flex items-center justify-between mb-1">
+          <span className="font-semibold text-neutral-800 text-base truncate max-w-[70%]">
+            {request.topic}
+          </span>
+          <span
+            className={`px-2 py-0.5 rounded-full font-semibold ${
+              request.status === "Open"
+                ? "bg-green-50 text-green-600"
+                : request.status === "Closed"
+                ? "bg-neutral-200 text-neutral-500"
+                : "bg-green-500 text-white"
             }`}
-            onClick={() => {
-              if (request.status === "Closed") {
-                toast.error("Cannot edit a closed request.");
-                return;
-              }
-              onEdit(request);
-            }}
-            disabled={request.status === "Closed"}
           >
-            <Pencil size={18} />
-          </Button>
-          <Button
+            {request.status}
+          </span>
+        </div>
+        <div className="text-neutral-500 mb-1 truncate">
+          {request.description}
+        </div>
+        <div className="flex flex-col text-neutral-400">
+          <span>
+            Fee:{" "}
+            <span className="text-green-600 font-semibold">
+              ₹{request.budget}
+            </span>
+          </span>
+          <div className="flex items-center justify-between">
+            <p>
+              Preferred: <span className="text-gray-500">{new Date(request.appointmentTime).toLocaleString()}</span>
+            </p>
+            <div className="flex gap-2">
+              <ConfirmDialog
+                open={closeDialogOpen}
+                onOpenChange={setCloseDialogOpen}
+                title="Close Request?"
+                description="Are you sure you want to close this request? You won't be able to reopen it."
+                confirmText="Close"
+                cancelText="Cancel"
+                onConfirm={() => {
+                  setCloseDialogOpen(false);
+                  onCloseRequest(request);
+                }}
+                onCancel={() => setCloseDialogOpen(false)}
+              ></ConfirmDialog>
+              <div className="flex gap-1 ml-auto">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className={`transition-opacity text-neutral-400 ${
+                    request.status === "Closed"
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:text-green-600"
+                  }`}
+                  onClick={() => {
+                    if (request.status === "Closed") {
+                      toast.error("Cannot edit a closed request.");
+                      return;
+                    }
+                    onEdit(request);
+                  }}
+                  disabled={request.status === "Closed"}
+                >
+                  <Pencil size={18} />
+                </Button>
+                {/* <Button
             size="icon"
             variant="ghost"
             className={`transition-opacity ${
@@ -110,35 +99,36 @@ function RequestCard({ request, onEdit, onView, onDelete, onCloseRequest }) {
             onClick={() => onView(request)}
           >
             <Eye size={18} />
-          </Button>
-          <ConfirmDialog
-            open={deleteDialogOpen}
-            onOpenChange={setDeleteDialogOpen}
-            title="Delete Request?"
-            description="Are you sure you want to delete this request? This action cannot be undone."
-            confirmText="Delete"
-            cancelText="Cancel"
-            onConfirm={() => {
-              setDeleteDialogOpen(false);
-              onDelete(request);
-            }}
-            onCancel={() => setDeleteDialogOpen(false)}
-          >
-            <Button
-              size="icon"
-              variant="ghost"
-              className={`transition-opacity ${
-                hovered ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-              } text-neutral-400 hover:text-red-500`}
-              onClick={(e) => {
-                e.stopPropagation();
-                setDeleteDialogOpen(true);
-              }}
-              type="button"
-            >
-              <Trash2 size={18} />
-            </Button>
-          </ConfirmDialog>
+          </Button> */}
+                <ConfirmDialog
+                  open={deleteDialogOpen}
+                  onOpenChange={setDeleteDialogOpen}
+                  title="Delete Request?"
+                  description="Are you sure you want to delete this request? This action cannot be undone."
+                  confirmText="Delete"
+                  cancelText="Cancel"
+                  onConfirm={() => {
+                    setDeleteDialogOpen(false);
+                    onDelete(request._id);
+                  }}
+                  onCancel={() => setDeleteDialogOpen(false)}
+                >
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className={`transition-opacity text-neutral-400 hover:text-red-500`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteDialogOpen(true);
+                    }}
+                    type="button"
+                  >
+                    <Trash2 size={18} />
+                  </Button>
+                </ConfirmDialog>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -221,107 +211,65 @@ function RequestForm({ onSubmit, onClose, initialData }) {
   );
 }
 
-// Main Requests Page
-const initialRequests = [
-  {
-    id: 1,
-    title: "Learn React Basics",
-    description: "Need help with React fundamentals.",
-    fee: 500,
-    preferredTime: "2024-06-10T18:00",
-    status: "Open",
-    offers: 2,
-  },
-  {
-    id: 2,
-    title: "Math Tutoring",
-    description: "Algebra and calculus doubts.",
-    fee: 700,
-    preferredTime: "2024-06-12T10:00",
-    status: "Offer Accepted",
-    offers: 3,
-  },
-  {
-    id: 3,
-    title: "Physics Doubts",
-    description: "Mechanics and optics.",
-    fee: 400,
-    preferredTime: "2024-06-15T14:00",
-    status: "Open",
-    offers: 1,
-  },
-  {
-    id: 4,
-    title: "Python Basics",
-    description: "Want to learn Python from scratch.",
-    fee: 600,
-    preferredTime: "2024-06-18T09:00",
-    status: "Closed",
-    offers: 0,
-  },
-  {
-    id: 5,
-    title: "English Grammar",
-    description: "Improve grammar skills.",
-    fee: 300,
-    preferredTime: "2024-06-20T17:00",
-    status: "Open",
-    offers: 2,
-  },
-  {
-    id: 6,
-    title: "History Help",
-    description: "Need help with world history.",
-    fee: 350,
-    preferredTime: "2024-06-22T11:00",
-    status: "Open",
-    offers: 1,
-  },
-  {
-    id: 7,
-    title: "JavaScript Advanced",
-    description: "Async/await, closures, etc.",
-    fee: 800,
-    preferredTime: "2024-06-25T21:00",
-    status: "Open",
-    offers: 4,
-  },
-];
-
 export default function Requests() {
-  const [requests, setRequests] = useState(initialRequests);
+  const [requests, setRequests] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editRequest, setEditRequest] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { postDb } = useMyContext();
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      setLoading(true);
+      try {
+        const allPosts = await postDb.fetchPosts();
+        if (allPosts) {
+          setRequests(allPosts);
+        } else {
+          toast.error("Failed to fetch requests.");
+        }
+      } catch (error) {
+        console.error("Error fetching requests:", error);
+        toast.error("Error fetching requests.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRequests();
+  }, []);
 
   // Handlers
-  const handleCreate = (data) => {
-    if (editRequest) {
-      setRequests((prev) =>
-        prev.map((r) => (r.id === editRequest.id ? { ...r, ...data } : r))
-      );
-      toast.success("Request updated successfully!");
-      setEditRequest(null);
-    } else {
-      setRequests((prev) => [
-        {
-          ...data,
-          id: Date.now(),
-          status: "Open",
-          offers: 0,
-        },
-        ...prev,
-      ]);
+  const handleCreate = async (data) => {
+    try {
+      setLoading(true);
+      const newRequest = await postDb.createPost(data);
+      console.log("New Request:", newRequest);
+      setRequests((prev) => [newRequest, ...prev]);
       toast.success("Request created successfully!");
+      if (!newRequest) {
+        toast.error("Failed to create request.");
+        return;
+      }
+    } catch (error) {
+      console.error("Error creating request:", error);
+    } finally {
+      setLoading(false);
     }
   };
+
   const handleEdit = (req) => {
     setEditRequest(req);
     setDrawerOpen(true);
   };
-  const handleView = () => toast.info("View feature coming soon!");
-  const handleDelete = (req) => {
-    setRequests((prev) => prev.filter((r) => r.id !== req.id));
-    toast.success("Request deleted.");
+
+  const handleDelete = async (reqId) => {
+    setRequests((prev) => prev.filter((r) => r._id !== reqId));
+    try {
+      await postDb.deletePost(reqId);
+    } catch (error) {
+      toast.error("Failed to delete request.");
+      console.error("Error deleting request:", error);
+    }
   };
   const handleCloseRequest = (req) => {
     setRequests((prev) =>
@@ -353,7 +301,11 @@ export default function Requests() {
           <Plus size={18} /> Create New
         </Button>
       </div>
-      {requests.length === 0 ? (
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600"></div>
+        </div>
+      ) : requests.length === 0 ? (
         <div className="text-neutral-400 text-center py-16">
           No requests found.{" "}
         </div>
@@ -361,10 +313,9 @@ export default function Requests() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {requests.slice(0, 6).map((req) => (
             <RequestCard
-              key={req.id}
+              key={req._id}
               request={req}
               onEdit={handleEdit}
-              onView={handleView}
               onDelete={handleDelete}
               onCloseRequest={handleCloseRequest}
             />

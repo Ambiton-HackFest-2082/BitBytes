@@ -9,60 +9,34 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle, Calendar as CalendarIcon, X } from "lucide-react";
 import useMyContext from "@/hooks/useMyContext";
 
-// Mock accepted offers data
-const acceptedOffers = [
-  {
-    id: 1,
-    teacher: "Mr. Sharma",
-    fee: 500,
-    time: "2024-06-12T18:00",
-    requestTitle: "Learn React Basics",
-    messages: [
-      { sender: "student", text: "Hi, looking forward to the session!" },
-      {
-        sender: "teacher",
-        text: "Hi! Please join at 6pm, link will be shared here.",
-      },
-    ],
-  },
-  {
-    id: 2,
-    teacher: "Ms. Gupta",
-    fee: 700,
-    time: "2024-06-15T10:00",
-    requestTitle: "Math Tutoring",
-    messages: [
-      {
-        sender: "teacher",
-        text: "Hello! Are you ready for the class on Saturday?",
-      },
-      { sender: "student", text: "Yes, thank you!" },
-    ],
-  },
-];
-
 function OfferChatCard({ offer, onChat }) {
+  console.log("offer : ", offer);
   return (
     <div className="bg-white border border-neutral-100 rounded-xl shadow-sm p-5 flex flex-col gap-2 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-1">
-        <span className="font-semibold text-neutral-800 text-base truncate max-w-[70%]">
-          {offer.requestTitle}
+        <span className="font-semibold text-neutral-800 text-base text-md truncate max-w-[70%]">
+          {offer.post.topic}
         </span>
       </div>
-      <div className="text-neutral-500 text-sm mb-1 truncate">
-        Teacher:{" "}
-        <span className="font-semibold text-green-700">{offer.teacher}</span>
+      <div className="text-neutral-500  mb-1 truncate">
+        Student:{" "}
+        <span className="font-semibold text-green-700">
+          {offer.offeredTo.fullName}
+        </span>
       </div>
-      <div className="flex flex-wrap gap-3 text-xs text-neutral-400 mb-2">
+      <div className="flex flex-wrap gap-3 text-neutral-400 mb-2">
         <span>
           Fee:{" "}
-          <span className="text-green-600 font-semibold">₹{offer.fee}</span>
+          <span className="text-green-600 font-semibold">
+            ₹{offer.proposed_price}
+          </span>
         </span>
-        <span>Time: {offer.time.replace("T", " ")}</span>
+        <span>Time: {new Date(offer.appointmentTime).toLocaleString()}</span>
       </div>
       <Button
         className="mt-2 bg-green-600 text-white px-4 py-2 hover:bg-green-700 flex items-center gap-2 cursor-pointer"
         onClick={() => onChat(offer)}
+        disabled={offer.status !== "Accepted"}
       >
         <MessageCircle size={18} /> Chat
       </Button>
@@ -266,21 +240,33 @@ function ChatDrawer({
 
 export default function Offered() {
   const [chatDrawer, setChatDrawer] = useState({ open: false, offer: null });
-  const [offers, setOffers] = useState(acceptedOffers);
+  const [offers, setOffers] = useState([]);
   const { offerDb } = useMyContext();
+  const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState("Accepted");
 
   useEffect(() => {
     const fetchOffers = async () => {
+      setLoading(true);
       try {
-        const offersData = await offerDb.fetchOffers();
-        console.log(offersData);
+        const response = await offerDb.fetchOffers();
+        setOffers(response);
+        console.log("compete offers : ",response)
       } catch (error) {
-        console.error(error);
+        console.error("Failed to fetch offers:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchOffers()
+    fetchOffers();
   }, []);
+
+  const filteredOffers = offers.filter((offer) => {
+    if (filter === "Accepted") return offer.status === "Accepted";
+    return offer.status === "Pending" || offer.status === "Rejected";
+  });
+  console.log("filteredoffer: ", filteredOffers);
 
   const handleOpenChat = (offer) => {
     setChatDrawer({ open: true, offer });
@@ -341,26 +327,61 @@ export default function Offered() {
     <div className="w-full ">
       <div className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-neutral-800 mb-1 tracking-tight">
-          Your Accepted Offers
+          Your created Offers
         </h1>
         <p className="text-neutral-500 text-base md:text-lg">
-          These students have accepted your offers to help. Click ‘Chat’ to
-          coordinate, share resources, and prepare for your sessions.
+          Here is the list of offers you have created for students. You can chat
+          with them for the accepted offers, send appointment links, and manage
+          your offers.
         </p>
       </div>
-      {acceptedOffers.length === 0 ? (
+      <div className="flex gap-2 mb-6">
+        <button
+          className={`px-4 py-2 rounded-full font-semibold border transition-colors text-sm ${
+            filter === "Accepted"
+              ? "bg-green-600 text-white border-green-600"
+              : "bg-white text-green-700 border-green-200 hover:bg-green-50"
+          }`}
+          onClick={() => setFilter("Accepted")}
+        >
+          Accepted
+        </button>
+        <button
+          className={`px-4 py-2 rounded-full font-semibold border transition-colors text-sm ${
+            filter === "DeclinedOrPending"
+              ? "bg-green-600 text-white border-green-600"
+              : "bg-white text-green-700 border-green-200 hover:bg-green-50"
+          }`}
+          onClick={() => setFilter("DeclinedOrPending")}
+        >
+          Declined or Pending
+        </button>
+      </div>
+      {filteredOffers.length === 0 ? (
         <div className="text-neutral-400 text-center py-16">
-          {"No offers created yet."}
+          {filter === "Accepted"
+            ? "No accepted offers yet."
+            : "No declined or pending offers yet."}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {offers.map((offer) => (
-            <OfferChatCard
-              key={offer.id}
-              offer={offer}
-              onChat={handleOpenChat}
-            />
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {loading ? (
+            <div className="col-span-4 text-center text-neutral-500">
+              Loading offers...
+            </div>
+          ) : filteredOffers.length > 0 ? (
+            filteredOffers.map((offer) => (
+              <OfferChatCard
+                key={offer._id}
+                offer={offer}
+                onChat={handleOpenChat}
+              />
+            ))
+          ) : (
+            <div className="col-span-4 text-center text-neutral-500">
+              No offers available.
+            </div>
+          )}
         </div>
       )}
       <ChatDrawer

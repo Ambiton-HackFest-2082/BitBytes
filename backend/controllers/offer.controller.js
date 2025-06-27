@@ -4,6 +4,7 @@ import { asyncHandler } from "../utility/AsyncHandler.js";
 
 import { Offer } from "../models/Offer.model.js";
 import { Teacher } from "../models/teacher.model.js";
+import { Post } from "../models/post.model.js";
 
 const createOffer = asyncHandler(async (req, res) => {
   const { fee, time, message } = req.body;
@@ -63,7 +64,12 @@ const fetchOffers = asyncHandler(async (req, res) => {
         offeredBy: userId,
       }
     : {
-        offeredTo: userId,
+        $and: [
+          { offeredTo: userId },
+          {
+            status: "Accepted",
+          },
+        ],
       };
 
   const offers = await Offer.find(query)
@@ -76,4 +82,56 @@ const fetchOffers = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, offers, "Successfully fetched Offers"));
 });
 
-export { createOffer, fetchOffers };
+const fetchOffersByReqId = asyncHandler(async (req, res) => {
+  const reqId = req.query.reqId;
+
+  const offers = await Offer.find({ post: reqId }).populate("offeredBy");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, offers, "Successfully fetched Offers"));
+});
+
+const fetchOfferByReqId = asyncHandler(async (req, res) => {
+  const { reqId } = req.query;
+  const offers = await Offer.findOne({ post: reqId }).populate({
+    path: "offeredBy",
+    select: "fullName _id",
+  });
+
+  if (!offers) {
+    throw new ApiError(404, "No offers found for this request");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, offers, "Successfully fetched Offers"));
+});
+
+const acceptOffer = asyncHandler(async (req, res) => {
+  const { offerId } = req.query;
+  const offer = await Offer.findById(offerId);
+  const post = await Post.findById(offer?.post);
+
+  if (!offer) {
+    throw new ApiError(404, "Offer not found");
+  }
+
+  offer.status = "Accepted";
+  await offer.save();
+
+  post.status = "closed";
+  await post.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, offer, "Offer accepted successfully"));
+});
+
+export {
+  createOffer,
+  fetchOffers,
+  fetchOfferByReqId,
+  fetchOffersByReqId,
+  acceptOffer,
+};
