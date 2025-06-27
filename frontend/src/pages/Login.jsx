@@ -44,10 +44,10 @@ const navigate = useNavigate()
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-teal-50 to-indigo-100 p-4">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-blue-700">SikshyaSetu</h1>
+          <h1 className="text-2xl font-bold text-green-700">SikshyaSetu</h1>
           <p className="text-gray-500 text-sm">
             A place for Teachers & Students to grow together
           </p>
@@ -75,7 +75,7 @@ const navigate = useNavigate()
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white rounded-lg p-2 hover:bg-blue-700 transition"
+            className="w-full bg-green-600 text-white rounded-lg p-2 hover:bg-green-700 transition"
             disabled={loading}
           >
             Login
@@ -83,7 +83,7 @@ const navigate = useNavigate()
         </form>
         <p className="text-sm text-center mt-4 text-gray-600">
           Don’t have an account?{" "}
-          <Link to="/auth/register" className="text-blue-500 underline">
+          <Link to="/auth/register" className="text-green-500 underline">
             Register
           </Link>
         </p>
