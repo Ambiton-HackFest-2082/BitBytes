@@ -11,33 +11,6 @@ import {
 import { toast } from "sonner";
 import useMyContext from "@/hooks/useMyContext";
 import { useParams } from "react-router-dom";
-// Mock offers data
-const offers = [
-  {
-    id: 1,
-    teacher: "Mr. Sharma",
-    fee: 500,
-    time: "2024-06-12T18:00",
-    message: "I can help you master React basics in one session!",
-    accepted: false,
-  },
-  {
-    id: 2,
-    teacher: "Ms. Gupta",
-    fee: 450,
-    time: "2024-06-13T17:00",
-    message: "Let's do a practical session with live coding.",
-    accepted: false,
-  },
-  {
-    id: 3,
-    teacher: "Mr. Verma",
-    fee: 600,
-    time: "2024-06-14T19:00",
-    message: "I have 5+ years of experience teaching React.",
-    accepted: false,
-  },
-];
 
 function OfferTile({ offer, onAccept, clicking, accepted }) {
   return (

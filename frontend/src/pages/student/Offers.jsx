@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -46,52 +46,27 @@ function OfferChatCard({ offer, onChat }) {
   );
 }
 
-function AppointmentBox({ appointment, status, onConfirm, onReject }) {
+function AppointmentBox({ url, time, onConfirm, onReject }) {
   return (
     <div className="mb-4 p-4 rounded-xl border border-green-200 bg-green-50 flex flex-col gap-2">
       <div className="flex items-center gap-2 text-green-700 font-semibold mb-1">
         <CalendarIcon size={16} /> Appointment
       </div>
-      <div>
-        <span className="font-medium">Link: </span>
-        <a
-          href={appointment.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline text-green-700 break-all"
-        >
-          {appointment.link}
-        </a>
-      </div>
-      {appointment.credential && (
-        <div>
-          <span className="font-medium">Password: </span>
-          {appointment.credential}
-        </div>
-      )}
-      {status === "pending" && (
+      <p className="text-sm text-neutral-600">
+        Appointment has been scheduled at the time :{" "}
+        {new Date(time).toLocaleString()}
+      </p>
+      {Date.now() >= new Date(time) && (
         <div className="flex gap-2 mt-2">
-          <Button
-            className="bg-green-600 text-white hover:bg-green-700 rounded-full px-5 py-1 text-sm"
+          <a
+            className="bg-green-600 text-center flex-1 text-white hover:bg-green-700 rounded-full px-5 py-2 "
             onClick={onConfirm}
+            href={url}
+            target="_blank"
           >
-            Confirm
-          </Button>
-          <Button
-            className="bg-red-500 text-white hover:bg-red-600 rounded-full px-5 py-1 text-sm"
-            onClick={onReject}
-          >
-            Reject
-          </Button>
+            Join
+          </a>
         </div>
-      )}
-      {status === "confirmed" && (
-        <div className="mt-2 text-green-600 font-semibold text-sm">
-          Confirmed
-        </div>
-      )}
-      {status === "rejected" && (
-        <div className="mt-2 text-red-500 font-semibold text-sm">Rejected</div>
       )}
     </div>
   );
@@ -99,23 +74,60 @@ function AppointmentBox({ appointment, status, onConfirm, onReject }) {
 
 function ChatDrawer({ open, onOpenChange, offer, onSendMessage }) {
   const [input, setInput] = useState("");
-  // Find the latest appointment message, if any
-  const appointmentMsg = offer?.messages
-    ?.slice()
-    .reverse()
-    .find((m) => m.type === "appointment");
-  // Store appointment status in local state (per offer)
-  const [appointmentStatus, setAppointmentStatus] = useState("pending");
+  const [messages, setMessages] = useState([]);
+  const { chatDb, appointmentDb } = useMyContext();
+  const [appointmentMsg, setAppointmentMsg] = useState(null);
+  const bottomRef = useRef(null);
 
-  // Reset status when offer changes
-  React.useEffect(() => {
-    setAppointmentStatus("pending");
-  }, [offer?.id, appointmentMsg?.link]);
+  useEffect(() => {
+    // Scroll to bottom when messages change
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
-  const handleSend = (e) => {
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const chats = await chatDb.fetchChats(offer?._id);
+        setMessages(chats);
+        // console.log(offer)
+      } catch (error) {
+        console.error("Failed to fetch chats:", error);
+      }
+    };
+    fetchChats();
+  }, [open, onOpenChange]);
+
+  useEffect(() => {
+    const fetchAppoinemt = async () => {
+      try {
+        const res = await appointmentDb.fetchAppoinment(offer?._id);
+        setAppointmentMsg(res);
+        // console.log(offer)
+      } catch (error) {
+        console.error("Failed to fetch appointment:", error);
+      }
+    };
+    fetchAppoinemt();
+  }, [open, onOpenChange]);
+
+  const createMsg = async () => {
+    try {
+      const res = await chatDb.createChat(
+        offer.offeredTo._id,
+        offer._id,
+        input
+      );
+
+      setMessages((prev) => [...prev, res]);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
+  };
+
+  const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
-    onSendMessage(input);
+    await createMsg();
     setInput("");
   };
 
@@ -123,44 +135,66 @@ function ChatDrawer({ open, onOpenChange, offer, onSendMessage }) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="max-w-md w-full flex flex-col">
         <SheetHeader>
-          <SheetTitle>Chat with {offer?.teacher}</SheetTitle>
+          <SheetTitle>Chat with {offer?.offeredBy.fullName}</SheetTitle>
           <div className="text-xs text-neutral-400 mt-1">
             For request:{" "}
-            <span className="font-semibold">{offer?.requestTitle}</span>
+            <span className="font-semibold">{offer?.post.topic}</span>
           </div>
         </SheetHeader>
+        {appointmentMsg && (
+          <AppointmentBox
+            url={appointmentMsg?.zoomLink}
+            time={appointmentMsg?.scheduleTime}
+            status={""}
+            onConfirm={() => {}}
+            onReject={() => {}}
+          />
+        )}
         <div className="flex-1 overflow-y-auto my-4 px-1">
           {/* Appointment box if present */}
-          {appointmentMsg && (
-            <AppointmentBox
-              appointment={appointmentMsg}
-              status={appointmentStatus}
-              onConfirm={() => setAppointmentStatus("confirmed")}
-              onReject={() => setAppointmentStatus("rejected")}
-            />
-          )}
-          {offer?.messages?.length === 0 ? (
+          {messages?.length === 0 ? (
             <div className="text-neutral-400 text-center mt-8">
               No messages yet.
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {offer?.messages?.map((msg, idx) =>
-                msg.type === "appointment" ? null : (
+              {messages?.map((msg, idx) => {
+                const isStudent = msg.sender.role === "student";
+                return (
                   <div
                     key={idx}
-                    className={`max-w-[80%] px-3 py-2 rounded-lg text-sm shadow-sm ${
-                      msg.sender === "student"
-                        ? "bg-green-50 self-end text-green-900"
-                        : "bg-neutral-100 self-start text-neutral-700"
+                    className={`flex flex-col gap-1 max-w-[80%] ${
+                      isStudent
+                        ? "self-end items-end"
+                        : "self-start items-start"
                     }`}
                   >
-                    {msg.text}
+                    {/* Sender Name */}
+                    <div className="text-xs font-semibold text-gray-600">
+                      {msg.name}
+                    </div>
+
+                    {/* Message Bubble */}
+                    <div
+                      className={`px-3 py-2 rounded-lg text-sm shadow-sm ${
+                        isStudent
+                          ? "bg-green-50 text-green-900"
+                          : "bg-neutral-100 text-neutral-700"
+                      }`}
+                    >
+                      {msg.message}
+                    </div>
+
+                    {/* Timestamp */}
+                    <p className="text-gray-400 text-[11px]">
+                      {new Date(msg.createdAt).toLocaleString()}
+                    </p>
                   </div>
-                )
-              )}
+                );
+              })}
             </div>
           )}
+          <div ref={bottomRef} />
         </div>
         <form
           onSubmit={handleSend}
@@ -269,12 +303,19 @@ export default function Offers() {
           )}
         </div>
       )}
-      <ChatDrawer
-        open={chatDrawer.open}
-        onOpenChange={handleCloseChat}
-        offer={chatDrawer.offer}
-        onSendMessage={handleSendMessage}
-      />
+
+      {loading ? (
+        <></>
+      ) : (
+        offers.length > 0 && (
+          <ChatDrawer
+            open={chatDrawer.open}
+            onOpenChange={handleCloseChat}
+            offer={chatDrawer.offer}
+            onSendMessage={handleSendMessage}
+          />
+        )
+      )}
     </div>
   );
 }
