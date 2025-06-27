@@ -8,15 +8,27 @@ import About from "../LandingPage/About"
 const Home = () => {
   return (
     <>
-    <Hero />
-    <About />
-    <Feature />
-    <VideoDisplay />
-    <Testimonial />
-    <FAQ />
-    <Contact />
-     
-      
+      <div id="hero-section">
+        <Hero />
+      </div>
+      <div id="about-section">
+        <About />
+      </div>
+      <div id="feature-section">
+        <Feature />
+      </div>
+        <VideoDisplay />
+      <div id="testimonial-section">
+        <Testimonial />
+      </div>
+      <div id="faq-section">
+        <FAQ />
+      </div>
+      <div id="contact-section">
+        <Contact />
+      </div>
+
+
     </>
   );
 };

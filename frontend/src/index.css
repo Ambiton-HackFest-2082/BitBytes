@@ -118,3 +118,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+*{
+  scroll-behavior: smooth;
+  scroll-padding: 40px;
+}

@@ -58,7 +58,7 @@ export default function FAQ() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8f4ff] flex flex-col items-center justify-center py-12 px-4">
+    <div className="min-h-100 bg-gray-100 flex flex-col items-center justify-center py-12 px-4">
       <div className="max-w-6xl w-full">
         {/* Header */}
         <div className="text-center mb-12">
@@ -68,10 +68,10 @@ export default function FAQ() {
           <div className="inline-block bg-teal-100 text-teal-700 px-4 py-1 rounded-full text-sm font-medium mb-4">
             FAQ
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+          <h1 className="text-4xl font-bold text-teal-800 mb-4">
             Frequently Asked Questions
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="text-teal-600 text-lg max-w-2xl mx-auto">
             Find answers to common questions about SikshyaSetu platform
           </p>
         </div>
@@ -87,8 +87,8 @@ export default function FAQ() {
               }}
               className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all duration-200 ${
                 activeTab === tab.name
-                  ? "bg-white-500 shadow-lg"
-                  : "bg-white text-gray-600 hover:bg-gray-50 shadow-sm"
+                  ? "bg-green-100 shadow-lg"
+                  : "bg-white text-teal-600 hover:bg-teal-50 shadow-sm"
               }`}
             >
               <span>{tab.icon}</span>
@@ -102,18 +102,18 @@ export default function FAQ() {
           {faqData[activeTab].map((faq, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
+              className="bg-white rounded-xl border border-teal-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="flex justify-between items-center w-full text-left p-6 hover:bg-gray-50 transition-colors duration-200"
+                className="flex justify-between items-center w-full text-left p-6 hover:bg-teal-50 transition-colors duration-200"
               >
-                <span className="font-semibold text-gray-800 pr-4">
+                <span className="font-semibold text-teal-800 pr-4">
                   {faq.question}
                 </span>
                 <span className="flex-shrink-0">
                   <div
-                    className={`w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all duration-200 ${
+                    className={`w-8 h-8 rounded-full border-2 border-teal-300 flex items-center justify-center transition-all duration-200 ${
                       openIndex === index
                         ? "bg-green-500 border-green-500 rotate-45"
                         : "hover:border-green-400"
@@ -121,7 +121,7 @@ export default function FAQ() {
                   >
                     <span
                       className={`text-xl font-light ${
-                        openIndex === index ? "text-white" : "text-gray-500"
+                        openIndex === index ? "text-white" : "text-teal-500"
                       }`}
                     >
                       +
@@ -133,8 +133,8 @@ export default function FAQ() {
               {/* Answer */}
               {openIndex === index && (
                 <div className="px-6 pb-6 max-h-[300px] overflow-y-auto transition-all duration-300 ease-in-out">
-                  <div className="h-px bg-gray-100 mb-4"></div>
-                  <p className="text-gray-600 leading-relaxed">
+                  <div className="h-px bg-teal-100 mb-4"></div>
+                  <p className="text-teal-600 leading-relaxed">
                     {faq.answer}
                   </p>
                 </div>
