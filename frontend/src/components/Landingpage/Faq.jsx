@@ -7,7 +7,7 @@ const faqData = {
     {
       question: "How do I register as a teacher or student?",
       answer:
-        "Click the 'Get Started' or 'Register' button and select your role during the signup process. You'll need to provide basic information and verify your email address.",
+        "Click the 'Get Started' or 'Register' button and select your role during the signup process. You'll need to provide basic informations.",
     },
     {
       question: "Is SikshyaSetu free to use?",
@@ -24,22 +24,18 @@ const faqData = {
     {
       question: "Can I ask questions and get answers from teachers?",
       answer:
-        "Absolutely. You can post questions, and teachers or even peers can respond and provide solutions. Questions can include text, images, and mathematical formulas.",
+        "Absolutely. You can post questions, and teachers or even peers can respond and provide solutions.",
     },
-    {
-      question: "How does the discussion forum work?",
-      answer:
-        "Our discussion forum allows threaded conversations where students can ask questions, share resources, and engage in academic discussions with moderation from teachers.",
-    },
+   
     {
       question: "Can I share files and resources?",
       answer:
-        "Yes, you can upload and share various file types including PDFs, images, documents, and presentations. All shared resources are organized by subject and grade level.",
+        "This feature is under development.",
     },
     {
       question: "Is there a messaging system?",
       answer:
-        "SikshyaSetu includes private messaging between students and teachers, group messaging for class discussions, and announcement features for important updates.",
+        "SikshyaSetu includes private messaging between students and teachers.",
     },
   ],
 };
