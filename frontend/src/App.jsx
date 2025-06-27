@@ -47,30 +47,29 @@ const router = createBrowserRouter([
             path: "contact",
             element: <Contact />,
           },
+          {
+            path: "auth",
+            element: "",
+            children: [
+              {
+                index: true,
+                element: <Navigate to={"login"} replace />,
+              },
+              {
+                path: "login",
+                element: <Login />,
+              },
+              {
+                path: "register",
+                element: <Registration />,
+              },
+            ],
+          },
         ],
       },
       {
         path: "*",
         element: <NotFound />,
-      },
-
-      {
-        path: "auth",
-        element: "",
-        children: [
-          {
-            index: true,
-            element: <Navigate to={"login"} replace />,
-          },
-          {
-            path: "login",
-            element: <Login />,
-          },
-          {
-            path: "register",
-            element: <Registration />,
-          },
-        ],
       },
 
       {
