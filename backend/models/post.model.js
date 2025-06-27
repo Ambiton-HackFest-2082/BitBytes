@@ -7,6 +7,11 @@ const postSchema = new mongoose.Schema({
     max: 200,
     required: true
   },
+  status: {
+    type: String,
+    enum: ["open", "closed"],
+    default: "open"
+  },
   description: {
     type: String,
   },
@@ -18,4 +23,4 @@ const postSchema = new mongoose.Schema({
   studentDetail: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' }
 });
 
-export const Post =  mongoose.model('Post', postSchema);
+export const Post = mongoose.model('Post', postSchema);
