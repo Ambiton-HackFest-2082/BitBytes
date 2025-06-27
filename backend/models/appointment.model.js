@@ -8,7 +8,8 @@ const appointmentSchema = new mongoose.Schema({
     trim: true
   },
   credentials: {
-    type: String
+    type: String,
+    default: null
   },
   scheduleTime: {
     type: Date
