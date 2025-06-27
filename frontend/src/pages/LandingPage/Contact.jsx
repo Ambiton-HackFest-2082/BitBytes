@@ -67,7 +67,7 @@ export default function ContactUs() {
           </div>
         </div>
 
-        <button onClick={handleContactSupport} className="w-full mt-8 bg-gradient-to-r from-green-600 to-teal-600 text-white py-3 px-4 rounded-lg font-medium hover:from-green-700 hover:to-teal-700 shadow-md hover:shadow-lg">
+        <button onClick={handleContactSupport} className="w-full mt-8 bg-gradient-to-r from-green-600 to-teal-600 text-white py-3 px-4 rounded-lg font-medium cursor-pointer hover:from-green-700 hover:to-teal-700 shadow-md hover:shadow-lg">
           Contact Support
         </button>
       </div>
