@@ -83,10 +83,10 @@ export default function Registration() {
     }, 3000);
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-teal-50 to-indigo-100 p-4">
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-blue-700">Join EduConnect</h1>
+          <h1 className="text-2xl font-bold text-green-700">Join SikshyaSetu</h1>
           <p className="text-gray-500 text-sm">
             Create your account as Student or Teacher
           </p>
@@ -136,14 +136,14 @@ export default function Registration() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white rounded-lg p-2 hover:bg-blue-700 transition"
+            className="w-full bg-green-600 text-white rounded-lg p-2 hover:bg-green-700 transition"
           >
             Register
           </button>
         </form>
         <p className="text-sm text-center mt-4 text-dark-600">
           Already have an account?{" "}
-          <Link to="/auth/login" className="text-blue-500 underline">
+          <Link to="/auth/login" className="text-green-500 underline">
             Login
           </Link>
         </p>
