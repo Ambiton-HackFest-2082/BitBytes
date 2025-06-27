@@ -3,7 +3,7 @@ import HeroImage from "../../assets/hero.svg";
 
 export default function Hero() {
   return (
-    <div className="relative overflow-hidden bg-white mt-8 mb-8">
+    <div className="relative overflow-hidden bg-white mt-5 mb-8">
       {/* Background decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full">
         {/* Large gradient orb top left */}

@@ -16,30 +16,30 @@ export default function Footer() {
       </div>
       <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center relative z-10">
         {/* Left side */}
-        <p className="text-sm mb-2 md:mb-0">&copy; {new Date().getFullYear()} SikshyaSetu. All rights reserved.</p>
+        <p className="text-sm mb-2 md:mb-0 text-white">&copy; {new Date().getFullYear()} SikshyaSetu. All rights reserved.</p>
 
         {/* Center links */}
         <div className="flex flex-col space-y-4 p-4">
           {/* Nav Links */}
           <nav className="flex flex-col space-y-2">
-            <a href="#hero-section" className="hover:text-teal-600 transition-colors">Home</a>
-            <a href="#about-section" className="hover:text-teal-600 transition-colors">About</a>
-            <a href="#feature-section" className="hover:text-teal-600 transition-colors">Features</a>
-            <a href="#testimonial-section" className="hover:text-teal-600 transition-colors">Testimonials</a>
-            <a href="#faq-section" className="hover:text-teal-600 transition-colors">FAQ</a>
-            <a href="#contact-section" className="hover:text-teal-600 transition-colors">Contact</a>
+            <a href="#hero-section" className="text-white hover:text-gray-300 transition-colors">Home</a>
+            <a href="#about-section" className="text-white hover:text-gray-300 transition-colors">About</a>
+            <a href="#feature-section" className="text-white hover:text-gray-300 transition-colors">Features</a>
+            <a href="#testimonial-section" className="text-white hover:text-gray-300 transition-colors">Testimonials</a>
+            <a href="#faq-section" className="text-white hover:text-gray-300 transition-colors">FAQ</a>
+            <a href="#contact-section" className="text-white hover:text-gray-300 transition-colors">Contact</a>
           </nav>
         </div>
         <div className="flex flex-col space-y-4 p-4">
   <div>
-    <p className="font-semibold text-white-800 mb-1">Team Members</p>
-    <ul className="space-y-1 text-gray-700">
+    <p className="font-semibold text-white mb-1">Team Members</p>
+    <ul className="space-y-1 text-white">
       <li>
         <a
           href="https://github.com/shivchandarsah" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="hover:underline text-green-600"
+          className="hover:underline text-white"
         >
           Shivchandar Sah
         </a>
@@ -49,7 +49,7 @@ export default function Footer() {
           href="https://github.com/yadavsantu" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="hover:underline text-green-600"
+          className="hover:underline text-white"
         >
           Santu Yadav
         </a>
@@ -59,7 +59,7 @@ export default function Footer() {
           href="https://github.com/Sworoop05" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="hover:underline text-green-600"
+          className="hover:underline text-white"
         >
           Sworoop Bhandari
         </a>
@@ -69,7 +69,7 @@ export default function Footer() {
           href="hhttps://github.com/durlavdeo" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="hover:underline text-green-600"
+          className="hover:underline text-white"
         >
           Durlav Deo
         </a>
@@ -78,7 +78,7 @@ export default function Footer() {
   </div>
 </div>
         {/* Right side (optional social or credit) */}
-        <p className="text-sm mt-2 md:mt-0">Empowering Education Through Collaboration</p>
+        <p className="text-sm mt-2 text-white md:mt-0">Empowering Education Through Collaboration</p>
       </div>
     </footer>
   );

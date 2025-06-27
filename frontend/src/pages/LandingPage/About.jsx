@@ -28,7 +28,7 @@ export default function About() {
   const [openIdx, setOpenIdx] = useState(null);
 
   return (
-    <section className="relative min-h-screen w-full bg-[#F8FAFC] flex items-center justify-center py-16 overflow-hidden">
+    <section className="min-h-100 w-full bg-[#F8FAFC] flex items-center justify-center  overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none -z-10">
         {/* Large gradient orb top left */}
@@ -38,14 +38,12 @@ export default function About() {
         {/* Small gradient orb bottom left */}
         <div className="absolute bottom-20 left-20 w-32 h-32 bg-gradient-to-br from-teal-200/20 to-pink-200/20 rounded-full blur-xl"></div>
         {/* Grid pattern overlay */}
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239CA3AF' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")`
-        }}></div>
+        
       </div>
       <div className="max-w-6xl w-full mx-auto px-4 py-12 flex flex-col md:flex-row items-center gap-12 relative z-10">
         {/* Left: Image and badge */}
         <div className="flex-1 flex flex-col items-center justify-center relative">
-          <div className="relative w-[340px] h-[340px] flex items-center justify-center">
+          <div className="relative w-[440px] h-[440px] flex items-center justify-center">
             <div className="absolute inset-0 rounded-full border-4 border-teal-100"></div>
             <img src={HeroImage} alt="Students collaborating" className="w-full h-full object-cover rounded-full shadow-xl" />
             {/* Play button overlay */}

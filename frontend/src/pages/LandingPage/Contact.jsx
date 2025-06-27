@@ -28,11 +28,14 @@ export default function ContactUs() {
   };
 
   return (
-    <section className="min-h-screen bg-green-50 flex items-center justify-center py-5 px-6">
-      <div className="max-w-6xl w-full bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col md:flex-row overflow-hidden">
+    <section className="min-h-100 bg-white flex flex-col items-center justify-center py-12 px-4">
+        <h2 className="text-3xl font-bold text-gray-800 text-center">
+            Contact Us
+          </h2>
+      <div className="max-w-6xl w-full mt-8 mb-5 bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col md:flex-row overflow-hidden">
         
         {/* Illustration Section */}
-        <div className="md:w-1/2 bg-gradient-to-br from-green-100 to-teal-100 flex items-center justify-center p-8">
+        <div className="md:w-1/2 border-r border-gray-200 flex items-center justify-center p-8">
           <img
             src={contImg}
             alt="Contact Illustration"
@@ -42,9 +45,7 @@ export default function ContactUs() {
 
         {/* Contact Info Section */}
         <div className="md:w-1/2 p-8 flex flex-col justify-center">
-          <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">
-            Contact Us
-          </h2>
+        
           <p className="text-center text-gray-600 mb-6">
             Reach out to our support team through any of the following methods:
           </p>

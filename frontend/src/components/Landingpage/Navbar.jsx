@@ -37,12 +37,8 @@ export default function Navbar() {
            </a>
             <a
               href="#about-section"
-              className={({ isActive }) =>
-                `transition-colors duration-200 ${isActive
-                  ? "text-teal-600 font-semibold"
-                  : "text-gray-700 hover:text-teal-600"
-                }`
-              }
+              className=
+              "transition-colors duration-200 text-gray-700 hover:text-teal-600"
             >
               About
             </a>

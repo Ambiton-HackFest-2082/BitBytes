@@ -58,7 +58,7 @@ export default function FAQ() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8f4ff] flex flex-col items-center justify-center py-12 px-4">
+    <div className="min-h-100 bg-gray-100 flex flex-col items-center justify-center py-12 px-4">
       <div className="max-w-6xl w-full">
         {/* Header */}
         <div className="text-center mb-12">

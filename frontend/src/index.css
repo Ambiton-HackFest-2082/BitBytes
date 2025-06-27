@@ -121,4 +121,5 @@
 
 *{
   scroll-behavior: smooth;
+  scroll-padding: 40px;
 }

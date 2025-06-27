@@ -2,7 +2,7 @@ import { FaGraduationCap, FaChartLine, FaClock, FaUsers } from "react-icons/fa";
 
 export default function Feature() {
   return (
-    <section className="relative py-24 bg-[#F8FAFC] overflow-hidden">
+    <section className="relative py-12 bg-white overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-purple-200/40 to-blue-200/30 rounded-full blur-3xl -z-10"></div>
       <div className="absolute top-1/2 right-0 w-72 h-72 bg-gradient-to-br from-pink-200/40 to-purple-100/30 rounded-full blur-2xl -z-10"></div>
