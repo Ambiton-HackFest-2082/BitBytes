@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import useAuth from "../services/userService";
+import useOffer from "../services/offerService";
 
 const MyContext = createContext();
 
@@ -9,6 +10,7 @@ export const MyContextProvider = ({ children }) => {
   const [requests, setRequests] = useState(null)
 
   const auth = useAuth({setLoading, setUser})
+  const offerDb =  useOffer()
 
   useEffect(()=>{
     auth.checkAuthStatus()
@@ -21,7 +23,8 @@ export const MyContextProvider = ({ children }) => {
     setUser,
     requests,
     setRequests,
-    auth
+    auth,
+    offerDb
   };
 
   return (

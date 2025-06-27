@@ -18,4 +18,4 @@ const postSchema = new mongoose.Schema({
   studentDetail: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' }
 });
 
-export default mongoose.model('Post', postSchema);
+export const Post =  mongoose.model('Post', postSchema);

@@ -1,11 +1,17 @@
 import mongoose from 'mongoose';
 
 const offerSchema = new mongoose.Schema({
-  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher' },
+  offeredBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   proposed_price: Number,
-  postId: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
+  post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
   appointmentTime: Date,
-  message: String
+  message: String,
+  offeredTo:{type:mongoose.Schema.Types.ObjectId, ref:"User"},
+  status:{
+    type:String,
+    enum:["Pending", "Accepted", "Rejected"],
+    default:"Pending"
+  }
 });
 
-export default mongoose.model('Offer', offerSchema);
+export const Offer =  mongoose.model('Offer', offerSchema);
