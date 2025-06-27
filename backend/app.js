@@ -25,8 +25,10 @@ app.use(cookieParser())
 import userRouter from './routes/user.route.js';
 import studentRouter from "./routes/student.route.js"
 import teacherRouter from './routes/teacher.route.js';
+import offerRouter from './routes/offer.route.js';
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/students", studentRouter)
 app.use("/api/v1/teachers", teacherRouter)
+app.use("/api/v1/offers", offerRouter)
 //http://localhost:5000/api/v1/users/register
 export default app;
