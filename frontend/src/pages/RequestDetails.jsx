@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import useMyContext from "@/hooks/useMyContext";
-import useMyContext from "@/hooks/useMyContext";
 
 // Mock: set to true to view as teacher, false as student
 

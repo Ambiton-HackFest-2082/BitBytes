@@ -21,15 +21,34 @@ const useOffer = () => {
       return res.data.data;
     } catch (error) {
       console.error(error)
-
     }
   }
+
+  const fetchOffersByReqId = async (reqId) => {
+    try {
+      const res = await axiosInstance.get(`/offers/fetchOffers-by-reqId?reqId=${reqId}`);
+      return res.data.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const fetchOfferByReqId = async (reqId) => {
+    try {
+      const res = await axiosInstance.get(`/offers/fetchOffer-reqId?reqId=${reqId}`);
+      return res.data.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   
 
   return {
     createOffer,
-    fetchOffers
+    fetchOffers,
+    fetchOffersByReqId,
+    fetchOfferByReqId
   };
 };
 
