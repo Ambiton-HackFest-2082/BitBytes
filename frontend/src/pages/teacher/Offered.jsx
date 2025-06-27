@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Calendar as CalendarIcon, X } from "lucide-react";
 import useMyContext from "@/hooks/useMyContext";
+import { NavLink } from "react-router-dom";
 
 function OfferChatCard({ offer, onChat }) {
   console.log("offer : ", offer);
@@ -17,6 +18,9 @@ function OfferChatCard({ offer, onChat }) {
         <span className="font-semibold text-neutral-800 text-base text-md truncate max-w-[70%]">
           {offer.post.topic}
         </span>
+        <NavLink to={`/request-details/${offer.post._id}`} className="font-semibold text-neutral-800 text-base text-md truncate max-w-[70%]">
+          View Post
+        </NavLink>
       </div>
       <div className="text-neutral-500  mb-1 truncate">
         Student:{" "}

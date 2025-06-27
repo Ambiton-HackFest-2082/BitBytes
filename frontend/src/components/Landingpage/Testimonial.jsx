@@ -4,40 +4,40 @@ export default function Testimonial() {
   const testimonials = [
     {
       name: "Anisha Sharma",
-      role: "Grade 12 Student",
-      company: "Kathmandu Model College",
+      role: "Bsc.CSIT",
+      company: "Patan Multiple College",
       message:
-        "SikshyaSetu helped me clear my doubts instantly. The interactive learning environment and instant feedback from teachers have significantly improved my understanding of complex topics.",
+        "SikshyaSetu helped me clear my doubts instantly.Mentors at SikshyaSetu are qualified and skillfull.",
       image: "https://i.pravatar.cc/100?img=32",
-      rating: 5,
-      badge: "Top Performer"
+      rating: 4,
+      badge: "Verified Student"
     },
     {
       name: "Ravi Gautam",
       role: "Mathematics Teacher",
-      company: "Sunshine Secondary School",
+      company: "KMC school ",
       message:
         "Connecting with my students has never been easier. The platform's collaborative features allow me to provide personalized guidance and track each student's progress effectively.",
       image: "https://i.pravatar.cc/100?img=13",
-      rating: 5,
-      badge: "Verified Educator"
+      rating: 4,
+      badge: "Verified Mentor"
     },
     {
       name: "Priya Kunwar",
       role: "Parent & Education Advocate",
-      company: "Parent Community Leader",
+      company: "Resident of Kathmandu",
       message:
-        "I love seeing how engaged my daughter is with her studies now. SikshyaSetu makes learning fun and accessible, and I can monitor her progress in real-time.",
+        "I love seeing how engaged my daughter is with her studies now. SikshyaSetu makes the gap between teacher-student narrow.",
       image: "https://i.pravatar.cc/100?img=48",
-      rating: 5,
+      rating: 3,
       badge: "Verified Parent"
     },
     {
-      name: "Dipesh Thapa",
+      name: "Divya Thapa",
       role: "Science Teacher",
-      company: "Modern English School",
+      company: "AVM Secondary School",
       message:
-        "The platform's resource sharing and discussion features have revolutionized how I conduct my classes. Students are more engaged and collaborative than ever before.",
+        "The platform's features made easier to find interested students.",
       image: "https://i.pravatar.cc/100?img=25",
       rating: 5,
       badge: "Verified Educator"

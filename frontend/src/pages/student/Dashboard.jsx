@@ -45,7 +45,7 @@ const StudentDashboard = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-neutral-800 mb-1 tracking-tight">Welcome back 👋</h1>
-        <p className="text-neutral-500 text-base md:text-lg">Your SkillBridge dashboard</p>
+        <p className="text-neutral-500 text-base md:text-lg">Student Dashboard</p>
       </div>
 
       {/* Stats Cards */}
