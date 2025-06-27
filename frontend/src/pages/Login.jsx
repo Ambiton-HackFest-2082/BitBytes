@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Registration.jsx";
 import { useEffect, useState } from "react";
 import useMyContext from "@/hooks/useMyContext.jsx";
+import StarBackground from "@/components/StarBackground.jsx";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -45,7 +46,8 @@ const navigate = useNavigate()
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-teal-50 to-indigo-100 p-4">
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+      <StarBackground />
+      <div className="bg-white z-50 rounded-2xl p-8 w-full max-w-md">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-green-700">SikshyaSetu</h1>
           <p className="text-gray-500 text-sm">
@@ -75,7 +77,7 @@ const navigate = useNavigate()
 
           <button
             type="submit"
-            className="w-full bg-green-600 text-white rounded-lg p-2 hover:bg-green-700 transition"
+            className="w-full bg-green-600 text-white rounded-lg p-2 hover:bg-green-700 cursor-pointer transition"
             disabled={loading}
           >
             Login

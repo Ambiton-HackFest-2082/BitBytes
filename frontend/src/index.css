@@ -122,4 +122,39 @@
 *{
   scroll-behavior: smooth;
   scroll-padding: 40px;
+  
+}
+button,link,a,select,option{
+  cursor: pointer;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+@keyframes float-slower {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(20px) scale(0.98); }
+}
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+.animate-float-slower {
+  animation: float-slower 12s ease-in-out infinite;
+}
+.animate-pulse-slow {
+  animation: pulse-slow 6s ease-in-out infinite;
+}
+
+@keyframes dot-fade {
+  0%, 100% { opacity: 0.10; }
+  50% { opacity: 0.18; }
+}
+.animate-dot-fade {
+  animation: dot-fade 8s ease-in-out infinite;
 }

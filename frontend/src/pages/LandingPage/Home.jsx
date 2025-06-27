@@ -17,7 +17,7 @@ const Home = () => {
       <div id="feature-section">
         <Feature />
       </div>
-        <VideoDisplay />
+        <VideoDisplay videoId="P0GvcO8TYtE" />
       <div id="testimonial-section">
         <Testimonial />
       </div>
