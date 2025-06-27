@@ -59,10 +59,9 @@ const router = createBrowserRouter([
             path: "faq",
             element: <Faq />,
           },
-         
         ],
       },
-      
+
       {
         path: "*",
         element: <NotFound />,
@@ -97,7 +96,7 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "request-details",
+        path: "request-details/:id",
         element: <RequestDetails />,
       },
 

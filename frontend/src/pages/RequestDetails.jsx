@@ -10,20 +10,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import useMyContext from "@/hooks/useMyContext";
-
-// Mock: set to true to view as teacher, false as student
-
-// Mock request data
-const request = {
-  id: 1,
-  title: "Learn React Basics",
-  description:
-    "I want to understand React fundamentals, including components, props, and state. Looking for a focused, hands-on session.",
-  fee: 500,
-  preferredTime: "2024-06-12T18:00",
-  createdAt: "2024-06-01T10:00",
-};
-
+import { useParams } from "react-router-dom";
 // Mock offers data
 const offers = [
   {
@@ -52,8 +39,7 @@ const offers = [
   },
 ];
 
-function OfferTile({ offer, onAccept, accepted }) {
-  
+function OfferTile({ offer, onAccept, clicking, accepted }) {
   return (
     <div
       className={`relative bg-white border border-neutral-100 rounded-2xl shadow-sm p-6 flex flex-col gap-3 transition-all duration-200 hover:shadow-lg ${
@@ -64,7 +50,7 @@ function OfferTile({ offer, onAccept, accepted }) {
       <div className="flex items-center gap-2 mb-1">
         <User2 className="text-green-600" size={20} />
         <span className="font-semibold text-neutral-800 text-base tracking-tight">
-          {offer.teacher}
+          {offer?.offeredBy.fullName}
         </span>
         {accepted && (
           <CheckCircle2
@@ -76,21 +62,26 @@ function OfferTile({ offer, onAccept, accepted }) {
       </div>
       <div className="flex flex-wrap gap-4 text-sm text-neutral-500 mb-1">
         <span className="flex items-center gap-1">
-          <IndianRupee size={16} /> {offer.fee}
+          <IndianRupee size={16} /> {offer?.proposed_price}
         </span>
         <span className="flex items-center gap-1">
-          <Calendar size={16} /> {offer.time.replace("T", " ")}
+          <Calendar size={16} />{" "}
+          {new Date(offer?.appointmentTime).toLocaleString()}
         </span>
       </div>
       <div className="text-neutral-700 italic mb-2 leading-relaxed">
-        {offer.message}
+        {offer?.message}
       </div>
       {!accepted && (
         <Button
-          className="w-fit bg-green-600 text-white hover:bg-green-700 rounded-full px-6 py-2 text-sm font-medium shadow-none"
-          onClick={() => onAccept(offer)}
+          className="w-fit bg-green-600 cursor-pointer text-white hover:bg-green-700 rounded-full px-6 py-2 text-sm font-medium shadow-none"
+          onClick={() => onAccept(offer?._id)}
         >
-          Accept Offer
+          {clicking ? (
+            <span className="animate-pulse">Accepting...</span>
+          ) : (
+            <span>Accept Offer</span>
+          )}
         </Button>
       )}
       {accepted && (
@@ -167,30 +158,89 @@ function OfferForm({ onSubmit, loading }) {
 }
 
 export default function RequestDetails() {
-  const [offersList, setOffersList] = useState(offers);
+  const [offersList, setOffersList] = useState([]);
   const [acceptedOfferId, setAcceptedOfferId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { user, offerDb } = useMyContext();
+  const { user, offerDb, postDb } = useMyContext();
   const [isTeacher, setIsTeacher] = useState(false);
+  const [request, setRequest] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const { id } = useParams();
 
   useEffect(() => {
     const isteacher = user?.role === "teacher";
     setIsTeacher(isteacher);
   }, [user]);
 
-  const handleAccept = (offer) => {
-    setAcceptedOfferId(offer.id);
-    setOffersList((prev) =>
-      prev.map((o) => ({ ...o, accepted: o.id === offer.id }))
-    );
-    toast.success("Offer accepted! You can now chat with the teacher.");
-  };
+  useEffect(() => {
+    const fetchPostDetails = async () => {
+      setLoading(true);
+      try {
+        console.log(id);
+        const res = await postDb.fetchPostDetail(id);
+        setRequest(res);
+        console.log("Request details:", res);
+      } catch (error) {
+        console.error("Error fetching offers:", error);
+        toast.error("Failed to load offers. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPostDetails();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchSubmittedOffer = async () => {
+      if (!isTeacher) return; // Only fetch for teachers
+      setLoading(true);
+      try {
+        const res = await offerDb.fetchOfferByReqId(id);
+        console.log(("Submitted offer:", res));
+        if (res) {
+          setSubmitted(true);
+        } else {
+          setSubmitted(false);
+        }
+      } catch (error) {
+        console.error("Error fetching submitted offer:", error);
+        toast.error(
+          "Failed to load your submitted offer. Please try again later."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSubmittedOffer();
+  }, [user, isTeacher, id]);
+
+  useEffect(() => {
+    const fetchOffers = async () => {
+      setLoading(true);
+      try {
+        const res = await offerDb.fetchOffersByReqId(id);
+        setOffersList(res);
+        console.log("Offer details:", res);
+      } catch (error) {
+        console.error("Error fetching offers:", error);
+        toast.error("Failed to load offers. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOffers();
+  }, [id]);
 
   const handleOfferSubmit = async (formdata) => {
     setLoading(true);
     try {
-      const res = await offerDb.createOffer(formdata);
-      console.log(res)
+      const res = await offerDb.createOffer({
+        ...formdata,
+        reqId: id,
+        studentId: request?.studentDetail._id,
+      });
+      console.log(res);
       toast.success("Offer sent to the student!");
     } catch (error) {
       console.error(error);
@@ -200,29 +250,61 @@ export default function RequestDetails() {
     }
   };
 
+  const handleAccpetOffer = async (offerId) => {
+    setAcceptedOfferId(offerId);
+    try {
+      const res = await offerDb.acceptOffer(offerId);
+      console.log("Offer accepted:", res);
+      toast.success("Offer accepted successfully!");
+      // Optionally, you can refresh the offers list or update the state
+      setOffersList((prev) =>
+        prev.map((offer) =>
+          offer._id === offerId ? { ...offer, status: "Accepted" } : offer
+        )
+      );
+    } catch (error) {
+      console.error("Error accepting offer:", error);
+      toast.error("Failed to accept the offer. Please try again.");
+    } finally {
+      setAcceptedOfferId(null);
+    }
+  };
+
   return (
     <div className="w-full max-w-3xl mx-auto py-12 px-2 md:px-0">
       {/* Request Card */}
-      <div className="bg-gradient-to-br from-green-50 via-white to-green-100 border border-green-100 rounded-3xl shadow-lg p-10 mb-12 flex flex-col gap-5">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-green-700 mb-1 tracking-tight leading-tight">
-          {request.title}
-        </h1>
-        <div className="text-lg text-neutral-700 mb-2 leading-relaxed">
-          {request.description}
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-green-500"></div>
         </div>
-        <div className="flex flex-wrap gap-8 text-base text-neutral-500">
-          <span className="flex items-center gap-2">
-            <IndianRupee size={18} />
-            <span className="font-semibold text-green-700">{request.fee}</span>
-          </span>
-          <span className="flex items-center gap-2">
-            <Clock size={18} /> {request.preferredTime.replace("T", " ")}
-          </span>
-          <span className="flex items-center gap-2">
-            <Calendar size={18} /> {request.createdAt.replace("T", " ")}
-          </span>
+      ) : (
+        <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-8 mb-10">
+          <h1 className="text-2xl font-bold text-neutral-800 mb-  4 tracking-tight">
+            {request?.topic}
+          </h1>
+          <p className="text-neutral-600 mb-4">{request?.description}</p>
+          <div className="flex items-center gap-4 text-sm text-neutral-500 mb-4">
+            <span className="flex items-center gap-1">
+              <IndianRupee size={16} /> {request?.budget}
+            </span>
+            <span className="flex items-center gap-1">
+              <Calendar size={16} />{" "}
+              {new Date(request?.appointmentTime).toLocaleString()}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <User2 className="text-green-600" size={20} />
+            <span className="font-semibold text-neutral-800 text-base tracking-tight">
+              {request?.studentDetail.fullName}
+            </span>
+          </div>
+          <div className="text-neutral-500 text-sm mt-2">
+            <span className="italic">
+              Posted on: {new Date(request?.createdAt).toLocaleString()}
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Student: Offers List */}
       {!isTeacher && (
@@ -230,7 +312,11 @@ export default function RequestDetails() {
           <h2 className="text-2xl font-bold text-neutral-800 mb-8 tracking-tight">
             Offers from Teachers
           </h2>
-          {offersList.length === 0 ? (
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-green-500"></div>
+            </div>
+          ) : offersList.length === 0 ? (
             <div className="text-neutral-400 text-center py-20 text-lg">
               No offers yet. Please wait for teachers to respond.
             </div>
@@ -238,10 +324,11 @@ export default function RequestDetails() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {offersList.map((offer) => (
                 <OfferTile
-                  key={offer.id}
+                  key={offer._id}
                   offer={offer}
-                  onAccept={handleAccept}
-                  accepted={offer.accepted || offer.id === acceptedOfferId}
+                  onAccept={handleAccpetOffer}
+                  accepted={offer.status === "Accepted"}
+                  clicking={acceptedOfferId === offer._id}
                 />
               ))}
             </div>
@@ -250,9 +337,22 @@ export default function RequestDetails() {
       )}
 
       {/* Teacher: Offer Form */}
-      {isTeacher && (
-        <OfferForm onSubmit={handleOfferSubmit} loading={loading} />
-      )}
+      {isTeacher &&
+        (submitted ? (
+          <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-8 mt-10">
+            <h2 className="text-2xl font-bold text-neutral-800 mb-4 tracking-tight">
+              Your Offer
+            </h2>
+            <p className="text-neutral-600 mb-4">
+              You have already submitted an offer for this request.
+            </p>
+            <p className="text-neutral-500 text-sm">
+              Please wait for the student to respond.
+            </p>
+          </div>
+        ) : (
+          <OfferForm onSubmit={handleOfferSubmit} loading={loading} />
+        ))}
     </div>
   );
 }

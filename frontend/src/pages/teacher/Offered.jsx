@@ -10,6 +10,7 @@ import { MessageCircle, Calendar as CalendarIcon, X } from "lucide-react";
 import useMyContext from "@/hooks/useMyContext";
 
 function OfferChatCard({ offer, onChat }) {
+  console.log("offer : ", offer);
   return (
     <div className="bg-white border border-neutral-100 rounded-xl shadow-sm p-5 flex flex-col gap-2 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-1">
@@ -250,6 +251,7 @@ export default function Offered() {
       try {
         const response = await offerDb.fetchOffers();
         setOffers(response);
+        console.log("compete offers : ",response)
       } catch (error) {
         console.error("Failed to fetch offers:", error);
       } finally {
@@ -264,6 +266,7 @@ export default function Offered() {
     if (filter === "Accepted") return offer.status === "Accepted";
     return offer.status === "Pending" || offer.status === "Rejected";
   });
+  console.log("filteredoffer: ", filteredOffers);
 
   const handleOpenChat = (offer) => {
     setChatDrawer({ open: true, offer });
@@ -369,7 +372,7 @@ export default function Offered() {
           ) : filteredOffers.length > 0 ? (
             filteredOffers.map((offer) => (
               <OfferChatCard
-                key={offer.id}
+                key={offer._id}
                 offer={offer}
                 onChat={handleOpenChat}
               />
