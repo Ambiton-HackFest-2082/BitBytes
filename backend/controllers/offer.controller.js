@@ -2,7 +2,7 @@ import { ApiResponse } from "../utility/ApiResponse.js";
 import { ApiError } from "../utility/ApiError.js";
 import { asyncHandler } from "../utility/AsyncHandler.js";
 
-import { Offer } from "../models/Offer.js";
+import { Offer } from "../models/Offer.model.js";
 import { Teacher } from "../models/teacher.model.js";
 import { Post } from "../models/post.model.js";
 

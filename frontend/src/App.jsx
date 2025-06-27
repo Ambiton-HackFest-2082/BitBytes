@@ -27,6 +27,7 @@ import ProtectedRoutes from "./utils/ProtectedRoutes";
 import Feature from "./components/Landingpage/Feature";
 import Testimonials from "./components/Landingpage/Testimonial";
 import Faq from "./components/Landingpage/Faq";
+import { useEffect, useRef } from "react";
 
 // import Offers from "./pages/student/Offers";
 
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
           },
         ],
       },
+
 
       {
         path: "*",
@@ -162,7 +164,12 @@ const router = createBrowserRouter([
   },
 ]);
 
+
+
+
 function App() {
+
+ 
   return (
     <MyContextProvider>
       <main>
