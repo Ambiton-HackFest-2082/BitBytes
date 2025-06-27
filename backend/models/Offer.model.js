@@ -6,12 +6,12 @@ const offerSchema = new mongoose.Schema({
   post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
   appointmentTime: Date,
   message: String,
-  offeredTo:{type:mongoose.Schema.Types.ObjectId, ref:"User"},
-  status:{
-    type:String,
-    enum:["Pending", "Accepted", "Rejected"],
-    default:"Pending"
+  offeredTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  status: {
+    type: String,
+    enum: ["Pending", "Accepted", "Rejected"],
+    default: "Pending"
   }
 });
 
-export const Offer =  mongoose.model('Offer', offerSchema);
+export const Offer = mongoose.model('Offer', offerSchema);
